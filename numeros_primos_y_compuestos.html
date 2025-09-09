@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔢 Números Primos y Compuestos - Aventura Matemática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            min-width: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #333;
+            min-height: 50px;
+            font-size: 16px;
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 5px;
+            margin: 20px 0;
+            max-width: 800px;
+        }
+
+        .number-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .number-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .number-cell.prime {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border-color: #4ecdc4;
+            animation: pulse 1s ease-in-out;
+        }
+
+        .number-cell.composite {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white;
+            border-color: #ff6b6b;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        .number-cell.neither {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            border-color: #ffd89b;
+        }
+
+        .number-cell.selected {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .game-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .sieve-visual {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            margin: 20px 0;
+            max-width: 500px;
+        }
+
+        .sieve-cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+
+        .sieve-cell.crossed-out {
+            background: #ffebee;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .factorization-tree {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            gap: 20px;
+        }
+
+        .tree-node {
+            padding: 8px 15px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .tree-connection {
+            width: 2px;
+            height: 20px;
+            background: #666;
+            margin: 0 auto;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .nav-tabs { gap: 5px; }
+            .tab-btn { padding: 8px 16px; font-size: 14px; }
+            .container { padding: 10px; }
+            .section { padding: 20px; }
+            .number-grid { grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); }
+            .number-cell { width: 45px; height: 45px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔢 Aventura Matemática: Números Primos y Compuestos</h1>
+        <p style="font-size: 18px; color: #666;">¡Descubre los secretos de los números y sus factorizaciones!</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🚀 Inicio</button>
+            <button class="tab-btn" onclick="showSection('detector')">🔍 Detector</button>
+            <button class="tab-btn" onclick="showSection('sieve')">🗂️ Criba</button>
+            <button class="tab-btn" onclick="showSection('factorization')">🌳 Factorización</button>
+            <button class="tab-btn" onclick="showSection('games')">🎮 Juegos</button>
+            <button class="tab-btn" onclick="showSection('challenges')">🏆 Desafíos</button>
+        </div>
+
+        <div class="score-board">
+            🌟 Puntos: <span id="totalScore">0</span> | 🔥 Racha: <span id="streak">0</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Introducción -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 20px;">🔢 ¡Bienvenido al mundo de los números!</h2>
+            <p style="font-size: 18px; line-height: 1.6; text-align: center;">
+                Los números primos son como los átomos de las matemáticas: ¡no se pueden dividir en partes más pequeñas! 
+                Los números compuestos son como moléculas formadas por varios átomos unidos.
+                ¿Estás listo para convertirte en un detective de números?
+            </p>
+            
+            <div class="activity-card">
+                <h3>🎯 Tu misión:</h3>
+                <ul style="font-size: 16px; line-height: 1.8;">
+                    <li>Identificar números primos y compuestos</li>
+                    <li>Usar la Criba de Eratóstenes para encontrar primos</li>
+                    <li>Descomponer números en factores primos</li>
+                    <li>Crear árboles de factorización</li>
+                    <li>Resolver desafíos matemáticos divertidos</li>
+                </ul>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(45deg, #4ecdc4, #44a08d);"></div>
+                    <span>Números Primos</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(45deg, #ff9a9e, #fad0c4);"></div>
+                    <span>Números Compuestos</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(45deg, #ffd89b, #19547b);"></div>
+                    <span>Ni primo ni compuesto</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('detector')" style="font-size: 18px;">
+                    🚀 ¡Comenzar la aventura!
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Detector -->
+        <div class="section" id="detector">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🔍 Detective de Números</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Analizador Individual</h3>
+                <p>¡Descubre si un número es primo, compuesto o ninguno de los dos!</p>
+                
+                <div class="input-group">
+                    <label>Analizar número:</label>
+                    <input type="number" id="analyzeNumber" min="1" max="1000" value="17">
+                    <button class="btn" onclick="analyzeNumber()">🔍 Analizar</button>
+                </div>
+
+                <div id="analysisResult" class="result-box"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>📊 Explorador de Rangos</h3>
+                <p>¡Explora todos los números en un rango y ve sus patrones!</p>
+                
+                <div class="input-group">
+                    <label>Desde:</label>
+                    <input type="number" id="rangeStart" min="1" max="100" value="1">
+                    <label>Hasta:</label>
+                    <input type="number" id="rangeEnd" min="2" max="200" value="50">
+                    <button class="btn" onclick="exploreRange()">📊 Explorar</button>
+                    <button class="btn" onclick="clearGrid()">🧹 Limpiar</button>
+                </div>
+
+                <div id="rangeStats" class="result-box"></div>
+                <div id="numbersGrid" class="number-grid"></div>
+            </div>
+        </div>
+
+        <!-- Sección Criba -->
+        <div class="section" id="sieve">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🗂️ Criba de Eratóstenes</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Simulador de la Criba Histórica</h3>
+                <p>¡Usa el método de Eratóstenes para encontrar números primos como lo hacían los antiguos griegos!</p>
+                
+                <div class="input-group">
+                    <label>Encontrar primos hasta:</label>
+                    <input type="number" id="sieveLimit" min="10" max="100" value="30">
+                    <button class="btn" onclick="startSieve()">🗂️ Iniciar Criba</button>
+                    <button class="btn" onclick="resetSieve()">🔄 Reiniciar</button>
+                </div>
+
+                <div id="sieveInstructions" class="result-box">
+                    <strong>Instrucciones:</strong> La criba eliminará automáticamente los múltiplos de cada número primo encontrado.
+                </div>
+
+                <div id="sieveGrid" class="sieve-visual"></div>
+                <div id="sieveResults" class="result-box"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>⚡ Criba Interactiva</h3>
+                <p>¡Tú decides qué números eliminar!</p>
+                
+                <button class="btn" onclick="setupInteractiveSieve()">⚡ Crear Criba Interactiva</button>
+                <div id="interactiveSieve" class="sieve-visual"></div>
+                <div id="interactiveInstructions" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Factorización -->
+        <div class="section" id="factorization">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🌳 Factorización Prima</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Creador de Árboles</h3>
+                <p>¡Descompón cualquier número en sus factores primos y ve su árbol de factorización!</p>
+                
+                <div class="input-group">
+                    <label>Factorizar número:</label>
+                    <input type="number" id="factorizeNumber" min="2" max="500" value="60">
+                    <button class="btn" onclick="factorizeNumber()">🌳 Crear Árbol</button>
+                </div>
+
+                <div id="factorizationResult" class="result-box"></div>
+                <div id="factorizationTree" class="factorization-tree"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🧮 Calculadora de Factores</h3>
+                <p>Encuentra todos los factores y factores primos de un número</p>
+                
+                <div class="input-group">
+                    <label>Encontrar factores de:</label>
+                    <input type="number" id="findFactorsNumber" min="1" max="200" value="24">
+                    <button class="btn" onclick="findAllFactors()">🧮 Calcular</button>
+                </div>
+
+                <div id="factorsResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Juegos -->
+        <div class="section" id="games">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🎮 Juegos con Números</h2>
+            
+            <div class="game-area">
+                <h3>⚡ Desafío Relámpago</h3>
+                <p>¡Identifica si los números son primos o compuestos lo más rápido posible!</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gameProgress"></div>
+                </div>
+
+                <div id="gameQuestion" class="quiz-card">
+                    <h4 id="questionText">¡Presiona "Nueva Pregunta" para comenzar!</h4>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                        <button class="btn" onclick="answerGame('primo')">🟢 Primo</button>
+                        <button class="btn" onclick="answerGame('compuesto')">🔴 Compuesto</button>
+                        <button class="btn" onclick="answerGame('ninguno')">🟡 Ninguno</button>
+                    </div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button class="btn" onclick="newGameQuestion()">🎯 Nueva Pregunta</button>
+                    </div>
+                    <div id="gameResult" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
+                </div>
+
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">⏱️</div>
+                        <div>Tiempo: <span id="gameTime">60</span>s</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">🎯</div>
+                        <div>Correctas: <span id="gameScore">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Desafíos -->
+        <div class="section" id="challenges">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🏆 Desafíos Épicos</h2>
+            
+            <div class="activity-card">
+                <h3>🧩 Rompecabezas de Primos</h3>
+                <div class="quiz-card">
+                    <p><strong>Desafío 1:</strong> ¿Cuántos números primos hay entre 1 y 20?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge1" placeholder="Cantidad de primos">
+                        <button class="btn" onclick="checkChallenge(1)">Verificar</button>
+                    </div>
+                    <div id="result1" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 2:</strong> ¿Cuál es la suma de los factores primos de 30?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge2" placeholder="Suma">
+                        <button class="btn" onclick="checkChallenge(2)">Verificar</button>
+                    </div>
+                    <div id="result2" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 3:</strong> ¿Cuál es el menor número compuesto que tiene exactamente 4 factores?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge3" placeholder="Número">
+                        <button class="btn" onclick="checkChallenge(3)">Verificar</button>
+                    </div>
+                    <div id="result3" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🌟 Aplicaciones Reales</h3>
+                <div class="quiz-card">
+                    <h4>🔐 Criptografía</h4>
+                    <p>La seguridad en internet usa números primos grandes. Si tienes dos números primos p=7 y q=11, ¿cuál sería n=p×q para crear una clave RSA básica?</p>
+                    <div class="input-group">
+                        <input type="number" id="cryptoChallenge" placeholder="n = p × q">
+                        <button class="btn" onclick="checkCryptoChallenge()">🔐 Verificar</button>
+                    </div>
+                    <div id="cryptoResult" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🎵 Música y Frecuencias</h4>
+                    <p>En música, las frecuencias de las notas a veces están relacionadas con números primos. Si La4 = 440 Hz, y queremos una frecuencia que sea un número primo cercano, ¿cuál sería el primer número primo mayor que 440?</p>
+                    <div class="input-group">
+                        <input type="number" id="musicChallenge" placeholder="Primer primo > 440">
+                        <button class="btn" onclick="checkMusicChallenge()">🎵 Verificar</button>
+                    </div>
+                    <div id="musicResult" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>🎉 ¡Excelente trabajo!</h2>
+        <p id="celebrationMessage"></p>
+        <button class="btn" onclick="closeCelebration()">Continuar</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let streak = 0;
+        let gameTime = 60;
+        let gameActive = false;
+        let gameTimer;
+        let currentGameNumber = 0;
+        let currentGameAnswer = '';
+        let sieveStep = 0;
+        let sieveNumbers = [];
+
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionName).classList.add('active');
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateScore(points) {
+            totalScore += points;
+            streak += 1;
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function resetStreak() {
+            streak = 0;
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function showCelebration(message) {
+            document.getElementById('celebrationMessage').textContent = message;
+            document.getElementById('celebration').style.display = 'block';
+            setTimeout(() => {
+                closeCelebration();
+            }, 2000);
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebration').style.display = 'none';
+        }
+
+        function isPrime(n) {
+            if (n < 2) return false;
+            if (n === 2) return true;
+            if (n % 2 === 0) return false;
+            for (let i = 3; i <= Math.sqrt(n); i += 2) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        function isComposite(n) {
+            return n > 1 && !isPrime(n);
+        }
+
+        function getNumberType(n) {
+            if (n === 1) return 'neither';
+            if (isPrime(n)) return 'prime';
+            if (isComposite(n)) return 'composite';
+            return 'neither';
+        }
+
+        function analyzeNumber() {
+            const number = parseInt(document.getElementById('analyzeNumber').value);
+            if (!number || number < 1) return;
+
+            const type = getNumberType(number);
+            let typeText, explanation, className;
+
+            switch(type) {
+                case 'prime':
+                    typeText = 'PRIMO';
+                    explanation = `${number} es primo porque solo es divisible por 1 y por sí mismo (${number}).`;
+                    className = 'prime';
+                    break;
+                case 'composite':
+                    const factors = getAllFactors(number);
+                    typeText = 'COMPUESTO';
+                    explanation = `${number} es compuesto porque tiene más de dos divisores: ${factors.join(', ')}.`;
+                    className = 'composite';
+                    break;
+                case 'neither':
+                    typeText = 'NI PRIMO NI COMPUESTO';
+                    explanation = `${number} no es primo ni compuesto. Por definición, 1 es una unidad.`;
+                    className = 'neither';
+                    break;
+            }
+
+            document.getElementById('analysisResult').innerHTML = 
+                `<div style="text-align: center;">` +
+                `<span style="font-size: 24px; color: ${type === 'prime' ? '#4ecdc4' : type === 'composite' ? '#ff6b6b' : '#ffd89b'}; font-weight: bold;">` +
+                `${number} es ${typeText}</span><br><br>` +
+                `<p>${explanation}</p>` +
+                `</div>`;
+
+            if (type === 'prime' || type === 'composite') {
+                updateScore(10);
+            }
+        }
+
+        function getAllFactors(n) {
+            let factors = [];
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) {
+                    factors.push(i);
+                }
+            }
+            return factors;
+        }
+
+        function getPrimeFactors(n) {
+            let factors = [];
+            let d = 2;
+            while (d * d <= n) {
+                while (n % d === 0) {
+                    factors.push(d);
+                    n /= d;
+                }
+                d++;
+            }
+            if (n > 1) factors.push(n);
+            return factors;
+        }
+
+        function exploreRange() {
+            const start = parseInt(document.getElementById('rangeStart').value);
+            const end = parseInt(document.getElementById('rangeEnd').value);
+            
+            if (!start || !end || start >= end || end - start > 200) {
+                alert('Por favor, ingresa un rango válido (máximo 200 números)');
+                return;
+            }
+
+            const grid = document.getElementById('numbersGrid');
+            grid.innerHTML = '';
+            
+            let primeCount = 0;
+            let compositeCount = 0;
+            let neitherCount = 0;
+
+            for (let i = start; i <= end; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'number-cell';
+                cell.textContent = i;
+                cell.onclick = () => showNumberDetails(i);
+                
+                const type = getNumberType(i);
+                cell.classList.add(type);
+                
+                switch(type) {
+                    case 'prime': primeCount++; break;
+                    case 'composite': compositeCount++; break;
+                    case 'neither': neitherCount++; break;
+                }
+                
+                grid.appendChild(cell);
+            }
+
+            document.getElementById('rangeStats').innerHTML = 
+                `<strong>Estadísticas del rango ${start}-${end}:</strong><br>` +
+                `🔵 Números primos: ${primeCount}<br>` +
+                `🔴 Números compuestos: ${compositeCount}<br>` +
+                `🟡 Ni primo ni compuesto: ${neitherCount}<br>` +
+                `📊 Total: ${end - start + 1} números`;
+
+            updateScore(15);
+        }
+
+        function showNumberDetails(number) {
+            // Remover selección anterior
+            document.querySelectorAll('.number-cell').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+            
+            // Seleccionar el número actual
+            event.target.classList.add('selected');
+            
+            const type = getNumberType(number);
+            const factors = getAllFactors(number);
+            const primeFactors = getPrimeFactors(number);
+            
+            let details = `<strong>Detalles del número ${number}:</strong><br>`;
+            details += `Tipo: ${type === 'prime' ? 'Primo' : type === 'composite' ? 'Compuesto' : 'Ni primo ni compuesto'}<br>`;
+            details += `Factores: ${factors.join(', ')}<br>`;
+            
+            if (type === 'composite') {
+                details += `Factores primos: ${primeFactors.join(' × ')}`;
+            }
+            
+            document.getElementById('rangeStats').innerHTML = details;
+        }
+
+        function clearGrid() {
+            document.getElementById('numbersGrid').innerHTML = '';
+            document.getElementById('rangeStats').innerHTML = '';
+        }
+
+        function startSieve() {
+            const limit = parseInt(document.getElementById('sieveLimit').value);
+            if (!limit || limit < 10) return;
+
+            sieveNumbers = [];
+            for (let i = 2; i <= limit; i++) {
+                sieveNumbers.push(i);
+            }
+
+            const grid = document.getElementById('sieveGrid');
+            grid.innerHTML = '';
+            
+            sieveNumbers.forEach(num => {
+                const cell = document.createElement('div');
+                cell.className = 'sieve-cell';
+                cell.textContent = num;
+                cell.id = `sieve-${num}`;
+                grid.appendChild(cell);
+            });
+
+            sieveStep = 0;
+            animateSieve();
+        }
+
+        function animateSieve() {
+            if (sieveStep >= sieveNumbers.length) {
+                const primes = sieveNumbers.filter(num => {
+                    const cell = document.getElementById(`sieve-${num}`);
+                    return !cell.classList.contains('crossed-out');
+                });
+                
+                document.getElementById('sieveResults').innerHTML = 
+                    `<strong>¡Criba completada!</strong><br>` +
+                    `Números primos encontrados: ${primes.join(', ')}<br>` +
+                    `Total de primos: ${primes.length}`;
+                
+                updateScore(25);
+                return;
+            }
+
+            const currentNumber = sieveNumbers[sieveStep];
+            const cell = document.getElementById(`sieve-${currentNumber}`);
+            
+            if (!cell.classList.contains('crossed-out')) {
+                // Es un número primo, marcar sus múltiplos
+                for (let multiple = currentNumber * 2; multiple <= Math.max(...sieveNumbers); multiple += currentNumber) {
+                    const multipleCell = document.getElementById(`sieve-${multiple}`);
+                    if (multipleCell) {
+                        multipleCell.classList.add('crossed-out');
+                    }
+                }
+                
+                document.getElementById('sieveInstructions').innerHTML = 
+                    `<strong>${currentNumber} es primo.</strong> Eliminando sus múltiplos: ${Array.from({length: Math.floor(Math.max(...sieveNumbers)/currentNumber) - 1}, (_, i) => currentNumber * (i + 2)).filter(x => x <= Math.max(...sieveNumbers)).join(', ')}`;
+            }
+
+            sieveStep++;
+            setTimeout(animateSieve, 1500);
+        }
+
+        function resetSieve() {
+            document.getElementById('sieveGrid').innerHTML = '';
+            document.getElementById('sieveResults').innerHTML = '';
+            document.getElementById('sieveInstructions').innerHTML = 
+                '<strong>Instrucciones:</strong> La criba eliminará automáticamente los múltiplos de cada número primo encontrado.';
+            sieveStep = 0;
+        }
+
+        function setupInteractiveSieve() {
+            const grid = document.getElementById('interactiveSieve');
+            grid.innerHTML = '';
+            
+            for (let i = 2; i <= 50; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'sieve-cell';
+                cell.textContent = i;
+                cell.onclick = () => toggleSieveCell(cell, i);
+                cell.style.cursor = 'pointer';
+                grid.appendChild(cell);
+            }
+
+            document.getElementById('interactiveInstructions').innerHTML = 
+                '<strong>Instrucciones:</strong> Haz clic en los números para eliminarlos de la criba. ¡Trata de encontrar todos los primos!';
+        }
+
+        function toggleSieveCell(cell, number) {
+            cell.classList.toggle('crossed-out');
+            
+            const remaining = Array.from(document.querySelectorAll('#interactiveSieve .sieve-cell:not(.crossed-out)'))
+                .map(cell => parseInt(cell.textContent));
+            
+            document.getElementById('interactiveInstructions').innerHTML = 
+                `<strong>Números restantes:</strong> ${remaining.join(', ')}<br>` +
+                `¿Son todos primos? ${remaining.every(isPrime) ? '¡Sí! 🎉' : 'Aún no... 🤔'}`;
+        }
+
+        function factorizeNumber() {
+            const number = parseInt(document.getElementById('factorizeNumber').value);
+            if (!number || number < 2) return;
+
+            const primeFactors = getPrimeFactors(number);
+            const factorCounts = {};
+            
+            primeFactors.forEach(factor => {
+                factorCounts[factor] = (factorCounts[factor] || 0) + 1;
+            });
+
+            let factorization = Object.entries(factorCounts)
+                .map(([factor, count]) => count > 1 ? `${factor}^${count}` : factor)
+                .join(' × ');
+
+            document.getElementById('factorizationResult').innerHTML = 
+                `<strong>Factorización prima de ${number}:</strong><br>` +
+                `${number} = ${factorization}<br>` +
+                `Factores primos únicos: ${Object.keys(factorCounts).join(', ')}`;
+
+            createFactorizationTree(number);
+            updateScore(20);
+        }
+
+        function createFactorizationTree(number) {
+            const tree = document.getElementById('factorizationTree');
+            tree.innerHTML = '<h4>Árbol de Factorización</h4>';
+            
+            let current = number;
+            let level = 0;
+            const treeData = [];
+            
+            while (current > 1) {
+                const factor = getSmallestPrimeFactor(current);
+                treeData.push({
+                    level: level,
+                    number: current,
+                    factor: factor,
+                    quotient: current / factor
+                });
+                current = current / factor;
+                level++;
+            }
+
+            treeData.forEach((data, index) => {
+                const levelDiv = document.createElement('div');
+                levelDiv.className = 'tree-level';
+                
+                if (index === 0) {
+                    const rootNode = document.createElement('div');
+                    rootNode.className = 'tree-node';
+                    rootNode.textContent = data.number;
+                    levelDiv.appendChild(rootNode);
+                } else {
+                    const factorNode = document.createElement('div');
+                    factorNode.className = 'tree-node';
+                    factorNode.textContent = data.factor;
+                    factorNode.style.background = 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+                    
+                    const quotientNode = document.createElement('div');
+                    quotientNode.className = 'tree-node';
+                    quotientNode.textContent = data.quotient;
+                    quotientNode.style.background = data.quotient === 1 ? 'linear-gradient(45deg, #ffd89b, #19547b)' : 
+                                                   isPrime(data.quotient) ? 'linear-gradient(45deg, #4ecdc4, #44a08d)' : 
+                                                   'linear-gradient(45deg, #ff9a9e, #fad0c4)';
+                    
+                    levelDiv.appendChild(factorNode);
+                    levelDiv.appendChild(quotientNode);
+                }
+                
+                tree.appendChild(levelDiv);
+                
+                if (index < treeData.length - 1) {
+                    const connection = document.createElement('div');
+                    connection.className = 'tree-connection';
+                    tree.appendChild(connection);
+                }
+            });
+        }
+
+        function getSmallestPrimeFactor(n) {
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return i;
+            }
+            return n;
+        }
+
+        function findAllFactors() {
+            const number = parseInt(document.getElementById('findFactorsNumber').value);
+            if (!number || number < 1) return;
+
+            const allFactors = getAllFactors(number);
+            const primeFactors = getPrimeFactors(number);
+            const uniquePrimeFactors = [...new Set(primeFactors)];
+
+            document.getElementById('factorsResult').innerHTML = 
+                `<strong>Análisis completo de ${number}:</strong><br>` +
+                `Todos los factores: ${allFactors.join(', ')}<br>` +
+                `Factores primos: ${primeFactors.join(' × ')}<br>` +
+                `Factores primos únicos: ${uniquePrimeFactors.join(', ')}<br>` +
+                `Cantidad total de factores: ${allFactors.length}`;
+
+            updateScore(15);
+        }
+
+        function newGameQuestion() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            gameTime = 60;
+            document.getElementById('gameScore').textContent = '0';
+            
+            gameTimer = setInterval(() => {
+                gameTime--;
+                document.getElementById('gameTime').textContent = gameTime;
+                document.getElementById('gameProgress').style.width = ((60 - gameTime) / 60 * 100) + '%';
+                
+                if (gameTime <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            generateGameQuestion();
+        }
+
+        function generateGameQuestion() {
+            if (!gameActive) return;
+
+            currentGameNumber = Math.floor(Math.random() * 97) + 2; // 2 a 98
+            currentGameAnswer = getNumberType(currentGameNumber);
+            
+            document.getElementById('questionText').textContent = 
+                `¿El número ${currentGameNumber} es primo, compuesto o ninguno?`;
+            document.getElementById('gameResult').textContent = '';
+        }
+
+        function answerGame(answer) {
+            if (!gameActive) return;
+
+            const resultDiv = document.getElementById('gameResult');
+            const correct = (answer === 'primo' && currentGameAnswer === 'prime') ||
+                           (answer === 'compuesto' && currentGameAnswer === 'composite') ||
+                           (answer === 'ninguno' && currentGameAnswer === 'neither');
+            
+            if (correct) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Correcto! +10 puntos</span>';
+                updateScore(10);
+                let currentScore = parseInt(document.getElementById('gameScore').textContent);
+                document.getElementById('gameScore').textContent = currentScore + 1;
+            } else {
+                const correctAnswer = currentGameAnswer === 'prime' ? 'primo' : 
+                                    currentGameAnswer === 'composite' ? 'compuesto' : 'ninguno';
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. ${currentGameNumber} es ${correctAnswer}</span>`;
+                resetStreak();
+            }
+            
+            setTimeout(() => {
+                generateGameQuestion();
+            }, 1500);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            const finalScore = parseInt(document.getElementById('gameScore').textContent);
+            let message = '';
+            
+            if (finalScore >= 20) {
+                message = '🏆 ¡Eres un experto en números primos!';
+            } else if (finalScore >= 15) {
+                message = '🎯 ¡Excelente trabajo!';
+            } else if (finalScore >= 10) {
+                message = '👍 ¡Buen desempeño!';
+            } else {
+                message = '💪 ¡Sigue practicando!';
+            }
+            
+            showCelebration(message + ` Respondiste ${finalScore} preguntas correctamente.`);
+            
+            document.getElementById('questionText').textContent = '¡Juego terminado! Presiona "Nueva Pregunta" para jugar otra vez.';
+            document.getElementById('gameProgress').style.width = '0%';
+            gameTime = 60;
+            document.getElementById('gameTime').textContent = gameTime;
+        }
+
+        function checkChallenge(challengeNumber) {
+            let userAnswer, correctAnswer, explanation;
+            
+            switch(challengeNumber) {
+                case 1:
+                    userAnswer = parseInt(document.getElementById('challenge1').value);
+                    const primesTo20 = [2, 3, 5, 7, 11, 13, 17, 19];
+                    correctAnswer = primesTo20.length;
+                    explanation = `Los números primos entre 1 y 20 son: ${primesTo20.join(', ')}.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result1').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(30);
+                        showCelebration('¡Maestro de los números primos!');
+                    } else {
+                        document.getElementById('result1').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+                    
+                case 2:
+                    userAnswer = parseInt(document.getElementById('challenge2').value);
+                    const primeFactors30 = getPrimeFactors(30);
+                    const uniqueFactors30 = [...new Set(primeFactors30)];
+                    correctAnswer = uniqueFactors30.reduce((sum, factor) => sum + factor, 0);
+                    explanation = `30 = 2 × 3 × 5. Los factores primos son: ${uniqueFactors30.join(', ')}. Su suma es: ${uniqueFactors30.join(' + ')} = ${correctAnswer}`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result2').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(35);
+                        showCelebration('¡Experto en factorización!');
+                    } else {
+                        document.getElementById('result2').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+                    
+                case 3:
+                    userAnswer = parseInt(document.getElementById('challenge3').value);
+                    correctAnswer = 6; // 6 = 2 × 3, factores: 1, 2, 3, 6 (4 factores)
+                    explanation = `6 = 2 × 3 tiene exactamente 4 factores: 1, 2, 3, 6. Es el menor compuesto con esta propiedad.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result3').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(40);
+                        showCelebration('¡Genio matemático!');
+                    } else {
+                        document.getElementById('result3').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+            }
+        }
+
+        function checkCryptoChallenge() {
+            const userAnswer = parseInt(document.getElementById('cryptoChallenge').value);
+            const correctAnswer = 7 * 11; // 77
+            
+            if (userAnswer === correctAnswer) {
+                document.getElementById('cryptoResult').innerHTML = 
+                    '<span style="color: green;">✅ ¡Correcto!</span><br>n = 7 × 11 = 77. En RSA real se usan primos muchísimo más grandes.';
+                updateScore(25);
+            } else {
+                document.getElementById('cryptoResult').innerHTML = 
+                    '<span style="color: red;">❌ Incorrecto.</span><br>n = 7 × 11 = 77. En RSA real se usan primos muchísimo más grandes.';
+            }
+        }
+
+        function checkMusicChallenge() {
+            const userAnswer = parseInt(document.getElementById('musicChallenge').value);
+            let correctAnswer = 441;
+            
+            // Encontrar el primer primo mayor que 440
+            while (!isPrime(correctAnswer)) {
+                correctAnswer++;
+            }
+            
+            if (userAnswer === correctAnswer) {
+                document.getElementById('musicResult').innerHTML = 
+                    `<span style="color: green;">✅ ¡Correcto!</span><br>El primer número primo mayor que 440 es ${correctAnswer}.`;
+                updateScore(30);
+            } else {
+                document.getElementById('musicResult').innerHTML = 
+                    `<span style="color: red;">❌ Incorrecto.</span><br>El primer número primo mayor que 440 es ${correctAnswer}.`;
+            }
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar efectos de botones
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Atajos de teclado
+            document.addEventListener('keydown', function(event) {
+                if (event.key === '1' && gameActive) answerGame('primo');
+                if (event.key === '2' && gameActive) answerGame('compuesto');
+                if (event.key === '3' && gameActive) answerGame('ninguno');
+            });
+        });
+
+        // Tips educativos
+        const educationalTips = [
+            "💡 El único número par que es primo es el 2.",
+            "🔍 Todos los números primos mayores que 3 terminan en 1, 3, 7 o 9.",
+            "🎯 1 no es considerado primo ni compuesto por definición matemática.",
+            "🌟 Existen infinitos números primos (demostrado por Euclides).",
+            "🎪 La factorización prima de cada número es única.",
+            "🎨 Los números primos son fundamentales en criptografía moderna.",
+            "🎵 La distribución de primos sigue patrones fascinantes pero irregulares."
+        ];
+
+        function showRandomTip() {
+            const tip = educationalTips[Math.floor(Math.random() * educationalTips.length)];
+            showCelebration(tip);
+        }
+
+        // Mostrar tip cada cierto tiempo
+        setInterval(showRandomTip, 180000); // Cada 3 minutos
+    </script>
+</body>
+</html>

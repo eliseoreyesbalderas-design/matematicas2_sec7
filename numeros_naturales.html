@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 Historia de los Números Naturales - Viaje a través del Tiempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .historical-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .civilization-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .civilization-card:hover {
+            transform: scale(1.02);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            min-width: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #333;
+            min-height: 50px;
+            font-size: 16px;
+        }
+
+        .number-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .number-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .number-card:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 20px 0;
+            animation: slideIn 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            margin: 0 20px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .timeline-date {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+        }
+
+        .numeral-converter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .conversion-display {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #333;
+            text-align: center;
+            font-size: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .ancient-numerals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .numeral-system {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .numeral-system:hover {
+            transform: scale(1.05);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .nav-tabs { gap: 5px; }
+            .tab-btn { padding: 8px 16px; font-size: 14px; }
+            .container { padding: 10px; }
+            .section { padding: 20px; }
+            .timeline-item { flex-direction: column !important; }
+            .ancient-numerals { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📜 Viaje a través del Tiempo: Los Números Naturales</h1>
+        <p style="font-size: 18px; color: #666;">¡Descubre cómo la humanidad aprendió a contar!</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🚀 Inicio</button>
+            <button class="tab-btn" onclick="showSection('origins')">🏺 Orígenes</button>
+            <button class="tab-btn" onclick="showSection('civilizations')">🏛️ Civilizaciones</button>
+            <button class="tab-btn" onclick="showSection('evolution')">📈 Evolución</button>
+            <button class="tab-btn" onclick="showSection('converter')">🔄 Convertidor</button>
+            <button class="tab-btn" onclick="showSection('games')">🎮 Juegos</button>
+        </div>
+
+        <div class="score-board">
+            🌟 Conocimiento: <span id="totalScore">0</span> puntos | 🔥 Descubrimientos: <span id="discoveries">0</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Introducción -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 20px;">🎯 ¡Bienvenido al fascinante mundo de los números!</h2>
+            <p style="font-size: 18px; line-height: 1.6; text-align: center;">
+                Los números naturales son los primeros números que aprendió la humanidad. Desde hacer marcas en huesos hasta los elegantes 
+                dígitos que usamos hoy, cada número cuenta una historia de miles de años de ingenio humano.
+            </p>
+            
+            <div class="activity-card">
+                <h3>🎯 Tu aventura incluirá:</h3>
+                <ul style="font-size: 16px; line-height: 1.8;">
+                    <li>Explorar los primeros sistemas de conteo humanos</li>
+                    <li>Viajar por antiguas civilizaciones y sus números</li>
+                    <li>Descubrir cómo llegamos a los números indoarábigos</li>
+                    <li>Convertir entre diferentes sistemas numerales</li>
+                    <li>Jugar con desafíos históricos divertidos</li>
+                </ul>
+            </div>
+
+            <div class="number-display">
+                <div class="number-card" onclick="animateNumber(this)">1</div>
+                <div class="number-card" onclick="animateNumber(this)">2</div>
+                <div class="number-card" onclick="animateNumber(this)">3</div>
+                <div class="number-card" onclick="animateNumber(this)">4</div>
+                <div class="number-card" onclick="animateNumber(this)">5</div>
+                <div class="number-card" onclick="animateNumber(this)">6</div>
+                <div class="number-card" onclick="animateNumber(this)">7</div>
+                <div class="number-card" onclick="animateNumber(this)">8</div>
+                <div class="number-card" onclick="animateNumber(this)">9</div>
+                <div class="number-card" onclick="animateNumber(this)">0</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('origins')" style="font-size: 18px;">
+                    🚀 ¡Comenzar el viaje temporal!
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Orígenes -->
+        <div class="section" id="origins">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🏺 Los Primeros Pasos del Conteo</h2>
+            
+            <div class="historical-card">
+                <h3>🦴 El Hueso de Ishango (±20,000 a.C.)</h3>
+                <p style="margin-bottom: 15px;">
+                    En el corazón de África, nuestros ancestros ya hacían marcas en huesos para contar. 
+                    El famoso hueso de Ishango es una de las primeras evidencias de matemáticas humanas.
+                </p>
+                <div class="input-group">
+                    <button class="btn" onclick="showIshango()">🔍 Ver Marcas del Ishango</button>
+                    <button class="btn" onclick="simulateCount()">✋ Simular Conteo con Dedos</button>
+                </div>
+                <div id="ishangoResult" class="result-box"></div>
+            </div>
+
+            <div class="historical-card">
+                <h3>✋ El Conteo con Dedos - Base Universal</h3>
+                <p>Los dedos fueron la primera "calculadora" humana. Por eso muchas culturas desarrollaron sistemas decimales.</p>
+                <div class="input-group">
+                    <label>Cuenta hasta:</label>
+                    <input type="number" id="fingerCount" min="1" max="20" value="10">
+                    <button class="btn" onclick="demonstrateFinger()">✋ Demostrar</button>
+                </div>
+                <div id="fingerResult" class="result-box"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎯 Sistemas de Conteo Primitivos</h3>
+                <p>Diferentes culturas desarrollaron maneras únicas de representar cantidades:</p>
+                <div class="ancient-numerals">
+                    <div class="numeral-system" onclick="showSystem('tallies')">
+                        <h4>Marcas de Conteo</h4>
+                        <div style="font-size: 24px;">||||  ||||</div>
+                        <p>Sistema más antiguo</p>
+                    </div>
+                    <div class="numeral-system" onclick="showSystem('knots')">
+                        <h4>Nudos Incas (Quipu)</h4>
+                        <div style="font-size: 24px;">🪢🪢🪢</div>
+                        <p>Cuerdas anudadas</p>
+                    </div>
+                    <div class="numeral-system" onclick="showSystem('stones')">
+                        <h4>Piedrecitas</h4>
+                        <div style="font-size: 24px;">●●●●●</div>
+                        <p>Origen de "calcular"</p>
+                    </div>
+                </div>
+                <div id="systemResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Civilizaciones -->
+        <div class="section" id="civilizations">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🏛️ Grandes Civilizaciones y sus Números</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item" style="animation-delay: 0.2s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">3000 a.C.</div>
+                        <h3>🏺 Mesopotamia - Cuneiforme</h3>
+                        <p>Los sumerios desarrollaron el primer sistema posicional en base 60. ¡Aún lo usamos para tiempo y ángulos!</p>
+                        <button class="btn" onclick="showCuneiform()" style="margin-top: 10px;">Ver Números</button>
+                    </div>
+                </div>
+
+                <div class="timeline-item" style="animation-delay: 0.4s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2000 a.C.</div>
+                        <h3>🐫 Egipto - Jeroglíficos</h3>
+                        <p>Símbolos únicos para potencias de 10. Una flor de loto representaba 1000.</p>
+                        <button class="btn" onclick="showEgyptian()" style="margin-top: 10px;">Ver Jeroglíficos</button>
+                    </div>
+                </div>
+
+                <div class="timeline-item" style="animation-delay: 0.6s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">800 a.C.</div>
+                        <h3>🏛️ Grecia - Alfabeto Numérico</h3>
+                        <p>Usaron letras de su alfabeto para representar números. ¡Muy práctico!</p>
+                        <button class="btn" onclick="showGreek()" style="margin-top: 10px;">Ver Sistema</button>
+                    </div>
+                </div>
+
+                <div class="timeline-item" style="animation-delay: 0.8s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">500 a.C.</div>
+                        <h3>🏛️ Roma - Numerales Romanos</h3>
+                        <p>I, V, X, L, C, D, M - un sistema que perduró por siglos en Europa.</p>
+                        <button class="btn" onclick="showRoman()" style="margin-top: 10px;">Ver Numerales</button>
+                    </div>
+                </div>
+
+                <div class="timeline-item" style="animation-delay: 1.0s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">500 d.C.</div>
+                        <h3>🕉️ India - El Gran Salto</h3>
+                        <p>¡Aquí nace nuestro sistema actual! Inventaron el cero y la notación posicional decimal.</p>
+                        <button class="btn" onclick="showIndian()" style="margin-top: 10px;">Ver Innovación</button>
+                    </div>
+                </div>
+
+                <div class="timeline-item" style="animation-delay: 1.2s;">
+                    <div class="timeline-content">
+                        <div class="timeline-date">800 d.C.</div>
+                        <h3>🕌 Mundo Árabe - Los Transmisores</h3>
+                        <p>Los matemáticos árabes perfeccionaron y difundieron el sistema indio por el mundo.</p>
+                        <button class="btn" onclick="showArabic()" style="margin-top: 10px;">Ver Difusión</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="civilizationDisplay" class="result-box"></div>
+        </div>
+
+        <!-- Sección Evolución -->
+        <div class="section" id="evolution">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">📈 La Evolución hacia Nuestro Sistema Actual</h2>
+            
+            <div class="activity-card">
+                <h3>🔍 El Poder del Cero</h3>
+                <p>El cero fue el invento más revolucionario. ¡Transformó las matemáticas para siempre!</p>
+                <div class="input-group">
+                    <button class="btn" onclick="demonstrateZero()">🚀 Ver el Poder del Cero</button>
+                    <button class="btn" onclick="showZeroHistory()">📚 Historia del Cero</button>
+                </div>
+                <div id="zeroResult" class="result-box"></div>
+            </div>
+
+            <div class="historical-card">
+                <h3>🌍 La Llegada a Europa</h3>
+                <p>Leonardo Fibonacci introdujo los números indoarábigos a Europa en 1202 con su "Liber Abaci".</p>
+                <div class="comparison-display" style="background: white; border-radius: 10px; padding: 20px; margin: 15px 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="text-align: center;">
+                            <h4>Antes (Romano)</h4>
+                            <div style="font-size: 24px; color: #e74c3c;">MCMLIV</div>
+                            <p>Difícil para calcular</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <h4>Después (Indoarábigo)</h4>
+                            <div style="font-size: 24px; color: #27ae60;">1954</div>
+                            <p>Fácil y eficiente</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="showFibonacci()">📖 Ver Contribución de Fibonacci</button>
+                <div id="fibonacciResult" class="result-box"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>⚖️ Ventajas del Sistema Actual</h3>
+                <p>¿Por qué triunfaron los números indoarábigos?</p>
+                <div class="input-group">
+                    <button class="btn" onclick="compareCalculation()">🧮 Comparar Cálculos</button>
+                    <button class="btn" onclick="showAdvantages()">✨ Ver Ventajas</button>
+                </div>
+                <div id="advantagesResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Convertidor -->
+        <div class="section" id="converter">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🔄 Convertidor de Sistemas Numerales</h2>
+            
+            <div class="numeral-converter">
+                <h3>🎯 Convertidor Universal</h3>
+                <p>¡Convierte números entre diferentes sistemas históricos!</p>
+                
+                <div class="input-group">
+                    <label>Número decimal:</label>
+                    <input type="number" id="decimalInput" min="1" max="3999" value="42">
+                    <button class="btn" onclick="convertNumber()">🔄 Convertir Todo</button>
+                </div>
+
+                <div class="conversion-display" id="conversionResults">
+                    Ingresa un número para ver las conversiones
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <button class="btn" onclick="convertToSpecific('roman')">🏛️ Solo Romano</button>
+                    <button class="btn" onclick="convertToSpecific('egyptian')">🐫 Solo Egipcio</button>
+                    <button class="btn" onclick="convertToSpecific('binary')">💻 Solo Binario</button>
+                    <button class="btn" onclick="convertToSpecific('babylonian')">🏺 Solo Babilonio</button>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎮 Desafío de Conversión</h3>
+                <p>¿Puedes convertir correctamente entre sistemas?</p>
+                <div class="input-group">
+                    <button class="btn" onclick="startConversionGame()">🎯 Nuevo Desafío</button>
+                    <input type="text" id="conversionAnswer" placeholder="Tu respuesta">
+                    <button class="btn" onclick="checkConversionAnswer()">✅ Verificar</button>
+                </div>
+                <div id="conversionGame" class="result-box">¡Presiona "Nuevo Desafío" para comenzar!</div>
+                <div id="conversionScore" class="score-board" style="margin-top: 10px;">Conversiones correctas: 0</div>
+            </div>
+        </div>
+
+        <!-- Sección Juegos -->
+        <div class="section" id="games">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🎮 Juegos Históricos</h2>
+            
+            <div class="game-area">
+                <h3>⚡ Trivia Histórica</h3>
+                <p>¡Pon a prueba tus conocimientos sobre la historia de los números!</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gameProgress"></div>
+                </div>
+
+                <div id="gameQuestion" class="quiz-card">
+                    <h4 id="questionText">¡Presiona "Nueva Pregunta" para comenzar!</h4>
+                    <div class="input-group" style="justify-content: center;">
+                        <input type="text" id="gameAnswer" placeholder="Tu respuesta">
+                        <button class="btn" onclick="checkGameAnswer()">✅ Responder</button>
+                        <button class="btn" onclick="newGameQuestion()">🎯 Nueva Pregunta</button>
+                    </div>
+                    <div id="gameResult" style="margin-top: 10px; font-weight: bold;"></div>
+                </div>
+
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">⏱️</div>
+                        <div>Tiempo: <span id="gameTime">60</span>s</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">🎯</div>
+                        <div>Correctas: <span id="gameScore">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🏺 Arqueólogo de Números</h3>
+                <p>¡Descifra sistemas numerales antiguos como un verdadero arqueólogo!</p>
+                <div class="input-group">
+                    <button class="btn" onclick="startArchaeologyGame()">🔍 Nueva Excavación</button>
+                </div>
+                <div id="archaeologyGame" class="result-box">
+                    ¡Comienza una excavación para descubrir números antiguos!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>🎉 ¡Descubrimiento Increíble!</h2>
+        <p id="celebrationMessage"></p>
+        <button class="btn" onclick="closeCelebration()">Continuar Explorando</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let discoveries = 0;
+        let gameTime = 60;
+        let gameActive = false;
+        let gameTimer;
+        let currentGameAnswer = '';
+        let conversionGameScore = 0;
+        let currentConversionChallenge = {};
+
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionName).classList.add('active');
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateScore(points) {
+            totalScore += points;
+            discoveries += 1;
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('discoveries').textContent = discoveries;
+        }
+
+        function showCelebration(message) {
+            document.getElementById('celebrationMessage').textContent = message;
+            document.getElementById('celebration').style.display = 'block';
+            setTimeout(() => {
+                closeCelebration();
+            }, 3000);
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebration').style.display = 'none';
+        }
+
+        function animateNumber(element) {
+            element.style.transform = 'scale(1.5) rotate(360deg)';
+            element.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+            setTimeout(() => {
+                element.style.transform = '';
+                element.style.background = '';
+            }, 500);
+        }
+
+        function showIshango() {
+            const marks = '||||  ||||  |||  ||||||  |||||  |||  ||';
+            document.getElementById('ishangoResult').innerHTML = 
+                `<strong>🦴 Marcas del Hueso de Ishango:</strong><br>
+                <div style="font-family: monospace; font-size: 18px; background: #f0f0f0; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                ${marks}
+                </div>
+                <p>Estas marcas sugieren conocimiento de números primos y secuencias matemáticas básicas. 
+                ¡Los humanos ya hacían matemáticas hace 20,000 años!</p>`;
+            updateScore(10);
+        }
+
+        function simulateCount() {
+            document.getElementById('ishangoResult').innerHTML = 
+                `<strong>✋ Conteo Primitivo:</strong><br>
+                <div style="display: flex; gap: 20px; align-items: center; margin: 15px 0;">
+                    <div>👆 1</div>
+                    <div>✌️ 2</div>
+                    <div>🤟 3</div>
+                    <div>🖖 4</div>
+                    <div>🖐️ 5</div>
+                    <div>🙌 10</div>
+                </div>
+                <p>Los dedos fueron la primera calculadora universal. Por eso muchos sistemas son decimales (base 10).</p>`;
+            updateScore(5);
+        }
+
+        function demonstrateFinger() {
+            const count = parseInt(document.getElementById('fingerCount').value) || 10;
+            let display = '';
+            let hands = Math.floor(count / 10);
+            let fingers = count % 10;
+            
+            for (let i = 0; i < hands; i++) {
+                display += '🙌 ';
+            }
+            for (let i = 0; i < fingers; i++) {
+                display += '👆';
+            }
+            
+            document.getElementById('fingerResult').innerHTML = 
+                `<strong>Contando hasta ${count}:</strong><br>
+                <div style="font-size: 24px; margin: 10px 0;">${display}</div>
+                <p>${hands > 0 ? `${hands} mano(s) completa(s) + ` : ''}${fingers} dedo(s) = ${count}</p>`;
+            updateScore(5);
+        }
+
+        function showSystem(type) {
+            let content = '';
+            switch(type) {
+                case 'tallies':
+                    content = `
+                        <h4>🏺 Sistema de Marcas (Paleolítico)</h4>
+                        <div style="font-family: monospace; font-size: 20px;">
+                        1: |<br>
+                        2: ||<br>
+                        3: |||<br>
+                        4: ||||<br>
+                        5: ||||̸<br>
+                        10: ||||̸ ||||̸
+                        </div>
+                        <p>El sistema más antiguo y universal. Cada marca = una unidad.</p>
+                    `;
+                    break;
+                case 'knots':
+                    content = `
+                        <h4>🪢 Quipu Inca (1400-1500 d.C.)</h4>
+                        <p>Los incas usaban cuerdas con nudos de colores para:</p>
+                        <ul>
+                        <li>Contar población y recursos</li>
+                        <li>Registrar fechas importantes</li>
+                        <li>Llevar contabilidad del imperio</li>
+                        </ul>
+                        <p>¡Un sistema decimal sin escritura!</p>
+                    `;
+                    break;
+                case 'stones':
+                    content = `
+                        <h4>● Sistema de Piedrecitas</h4>
+                        <p>Los pastores usaban piedras para contar ovejas:</p>
+                        <div style="font-size: 20px; margin: 10px 0;">
+                        1 oveja = ● una piedra<br>
+                        10 ovejas = ●●●●● ●●●●●
+                        </div>
+                        <p>La palabra "cálculo" viene del latín "calculus" = piedrecita.</p>
+                    `;
+                    break;
+            }
+            document.getElementById('systemResult').innerHTML = content;
+            updateScore(8);
+        }
+
+        function showCuneiform() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🏺 Sistema Cuneiforme Babilónico</h3>
+                <p>Los babilonios usaron el primer sistema posicional de la historia (base 60):</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="text-align: center; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𒐕</div>
+                        <p>1</p>
+                    </div>
+                    <div style="text-align: center; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𒌋</div>
+                        <p>10</p>
+                    </div>
+                    <div style="text-align: center; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𒐕𒌋</div>
+                        <p>60</p>
+                    </div>
+                </div>
+                <p>¡Su legado: 60 segundos, 60 minutos, 360 grados!</p>
+            `;
+            updateScore(15);
+        }
+
+        function showEgyptian() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🐫 Numerales Jeroglíficos Egipcios</h3>
+                <p>Cada símbolo representa una potencia de 10:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 20px 0;">
+                    <div style="text-align: center; background: #ffe8d6; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𓏺</div>
+                        <p>1</p>
+                    </div>
+                    <div style="text-align: center; background: #ffe8d6; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𓎆</div>
+                        <p>10</p>
+                    </div>
+                    <div style="text-align: center; background: #ffe8d6; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𓍢</div>
+                        <p>100</p>
+                    </div>
+                    <div style="text-align: center; background: #ffe8d6; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">𓆼</div>
+                        <p>1,000 (flor de loto)</p>
+                    </div>
+                </div>
+                <p>Ejemplo: 1,234 = 𓆼𓍢𓍢𓎆𓎆𓎆𓏺𓏺𓏺𓏺</p>
+            `;
+            updateScore(15);
+        }
+
+        function showGreek() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🏛️ Sistema Numérico Griego</h3>
+                <p>Usaron letras del alfabeto para representar números:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin: 20px 0;">
+                    <div style="text-align: center; background: #e8f4fd; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">α</div>
+                        <p>1</p>
+                    </div>
+                    <div style="text-align: center; background: #e8f4fd; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">β</div>
+                        <p>2</p>
+                    </div>
+                    <div style="text-align: center; background: #e8f4fd; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">ι</div>
+                        <p>10</p>
+                    </div>
+                    <div style="text-align: center; background: #e8f4fd; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">ρ</div>
+                        <p>100</p>
+                    </div>
+                </div>
+                <p>Sistema muy práctico para escribir, pero difícil para calcular.</p>
+            `;
+            updateScore(15);
+        }
+
+        function showRoman() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🏛️ Numerales Romanos</h3>
+                <p>El sistema más duradero de Europa:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin: 20px 0;">
+                    <div style="text-align: center; background: #ffeaa7; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">I</div>
+                        <p>1</p>
+                    </div>
+                    <div style="text-align: center; background: #ffeaa7; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">V</div>
+                        <p>5</p>
+                    </div>
+                    <div style="text-align: center; background: #ffeaa7; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">X</div>
+                        <p>10</p>
+                    </div>
+                    <div style="text-align: center; background: #ffeaa7; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">C</div>
+                        <p>100</p>
+                    </div>
+                    <div style="text-align: center; background: #ffeaa7; padding: 10px; border-radius: 5px;">
+                        <div style="font-size: 24px;">M</div>
+                        <p>1000</p>
+                    </div>
+                </div>
+                <p>Ejemplo: MCMLIV = 1954. ¡Aún se usa en relojes y monumentos!</p>
+            `;
+            updateScore(15);
+        }
+
+        function showIndian() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🕉️ La Revolución India</h3>
+                <p>¡Aquí comienza nuestro sistema actual!</p>
+                <div style="background: #d1f2eb; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4>🚀 Grandes Innovaciones:</h4>
+                    <ul style="font-size: 16px; line-height: 1.8;">
+                        <li><strong>El Cero (शून्य - Shunya):</strong> Concepto revolucionario</li>
+                        <li><strong>Notación Posicional:</strong> El valor depende de la posición</li>
+                        <li><strong>Base Decimal:</strong> Sistema de 10 dígitos</li>
+                        <li><strong>Brahmi y Devanagari:</strong> Ancestros de nuestros números</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; font-size: 24px; margin: 20px 0;">
+                    Original: ० १ २ ३ ४ ५ ६ ७ ८ ९<br>
+                    Actual: &nbsp;&nbsp;0 1 2 3 4 5 6 7 8 9
+                </div>
+            `;
+            updateScore(20);
+        }
+
+        function showArabic() {
+            document.getElementById('civilizationDisplay').innerHTML = `
+                <h3>🕌 La Difusión Árabe</h3>
+                <p>Los matemáticos árabes perfeccionaron y extendieron el sistema indio:</p>
+                <div style="background: #fef9e7; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4>📚 Grandes Contribuciones:</h4>
+                    <ul style="font-size: 16px; line-height: 1.8;">
+                        <li><strong>Al-Juarismi (820 d.C.):</strong> "Sobre el cálculo con numerales hindúes"</li>
+                        <li><strong>Traducción al Árabe:</strong> Preservaron el conocimiento</li>
+                        <li><strong>Mejoras en Álgebra:</strong> Facilitaron los cálculos</li>
+                        <li><strong>Difusión Comercial:</strong> Por las rutas de comercio</li>
+                    </ul>
+                </div>
+                <p>Por eso se llaman "números arábigos" en Occidente, aunque su origen sea indio.</p>
+            `;
+            updateScore(20);
+        }
+
+        function demonstrateZero() {
+            document.getElementById('zeroResult').innerHTML = `
+                <h4>🚀 El Poder del Cero</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div style="background: #ffebee; padding: 15px; border-radius: 5px;">
+                        <h5>❌ Sin Cero</h5>
+                        <p>No se podía distinguir:</p>
+                        <div style="font-family: monospace;">
+                        15 (quince)<br>
+                        15_ (ciento cincuenta?)
+                        </div>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 5px;">
+                        <h5>✅ Con Cero</h5>
+                        <p>Claridad total:</p>
+                        <div style="font-family: monospace;">
+                        15 (quince)<br>
+                        150 (ciento cincuenta)
+                        </div>
+                    </div>
+                </div>
+                <p><strong>¡El cero hizo posible la matemática moderna!</strong></p>
+            `;
+            updateScore(15);
+        }
+
+        function showZeroHistory() {
+            document.getElementById('zeroResult').innerHTML = `
+                <h4>📚 Historia del Cero</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <p><strong>📅 Línea de tiempo:</strong></p>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Babilonios (400 a.C.):</strong> Espacio en blanco como marcador</li>
+                        <li><strong>Mayas (200 d.C.):</strong> Símbolo de concha para cero</li>
+                        <li><strong>India (628 d.C.):</strong> Brahmagupta define el cero matemático</li>
+                        <li><strong>Árabes (820 d.C.):</strong> Al-Juarismi lo introduce en álgebra</li>
+                        <li><strong>Europa (1202):</strong> Fibonacci lo lleva a Occidente</li>
+                    </ul>
+                </div>
+                <p>¡El cero tardó 1600 años en llegar de India a Europa!</p>
+            `;
+            updateScore(10);
+        }
+
+        function showFibonacci() {
+            document.getElementById('fibonacciResult').innerHTML = `
+                <h4>📖 Leonardo Fibonacci (1170-1250)</h4>
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 5px;">
+                    <p><strong>Su libro "Liber Abaci" (1202) cambió Europa:</strong></p>
+                    <blockquote style="font-style: italic; margin: 10px 0; padding: 10px; background: white; border-left: 4px solid #2196f3;">
+                    "Los nueve símbolos indios son: 9 8 7 6 5 4 3 2 1. 
+                    Con estos nueve símbolos, y con el símbolo 0... 
+                    cualquier número puede escribirse."
+                    </blockquote>
+                    <p><strong>Impacto:</strong></p>
+                    <ul>
+                        <li>Comerciantes adoptaron el nuevo sistema</li>
+                        <li>Facilitó el comercio internacional</li>
+                        <li>Aceleró el desarrollo científico</li>
+                        <li>Hizo obsoletos los ábacos</li>
+                    </ul>
+                </div>
+            `;
+            updateScore(15);
+        }
+
+        function compareCalculation() {
+            document.getElementById('advantagesResult').innerHTML = `
+                <h4>⚖️ Comparación de Sistemas</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div style="background: #ffebee; padding: 15px; border-radius: 5px;">
+                        <h5>🏛️ Sistema Romano</h5>
+                        <p><strong>Suma:</strong> CCXIV + LXVII = ?</p>
+                        <p style="font-size: 12px; color: #666;">
+                        (214 + 67 = 281)<br>
+                        Resultado: CCLXXXI
+                        </p>
+                        <p><strong>¡Muy complicado! 😵</strong></p>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 5px;">
+                        <h5>🕉️ Sistema Indoarábigo</h5>
+                        <p><strong>Suma:</strong> 214 + 67 = ?</p>
+                        <pre style="font-family: monospace; background: white; padding: 5px;">
+  214
++  67
+-----
+  281</pre>
+                        <p><strong>¡Fácil y rápido! 🚀</strong></p>
+                    </div>
+                </div>
+            `;
+            updateScore(10);
+        }
+
+        function showAdvantages() {
+            document.getElementById('advantagesResult').innerHTML = `
+                <h4>✨ Ventajas del Sistema Actual</h4>
+                <div style="background: #f1f8e9; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 5px;">
+                            <h5>🎯 Notación Posicional</h5>
+                            <p>El valor depende de la posición: 123 vs 321</p>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 5px;">
+                            <h5>⭕ El Cero</h5>
+                            <p>Permite representar la nada y actúa como marcador</p>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 5px;">
+                            <h5>🔟 Base Decimal</h5>
+                            <p>Solo 10 símbolos para infinitos números</p>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 5px;">
+                            <h5>🧮 Cálculo Fácil</h5>
+                            <p>Algoritmos simples para todas las operaciones</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            updateScore(15);
+        }
+
+        function convertNumber() {
+            const decimal = parseInt(document.getElementById('decimalInput').value) || 0;
+            if (decimal < 1 || decimal > 3999) {
+                document.getElementById('conversionResults').innerHTML = 'Por favor ingresa un número entre 1 y 3999';
+                return;
+            }
+
+            const conversions = {
+                'Romano': toRoman(decimal),
+                'Binario': decimal.toString(2),
+                'Egipcio': toEgyptian(decimal),
+                'Babilónico': `Base 60: ${toBabylonian(decimal)}`
+            };
+
+            let html = `<h4>Número ${decimal} en diferentes sistemas:</h4>`;
+            for (let system in conversions) {
+                html += `<div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 5px;">
+                    <strong>${system}:</strong> ${conversions[system]}
+                </div>`;
+            }
+
+            document.getElementById('conversionResults').innerHTML = html;
+            updateScore(5);
+        }
+
+        function toRoman(num) {
+            const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+            const symbols = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+            let result = '';
+            
+            for (let i = 0; i < values.length; i++) {
+                while (num >= values[i]) {
+                    result += symbols[i];
+                    num -= values[i];
+                }
+            }
+            return result;
+        }
+
+        function toEgyptian(num) {
+            const symbols = ['𓆼', '𓍢', '𓎆', '𓏺'];
+            const values = [1000, 100, 10, 1];
+            let result = '';
+            
+            for (let i = 0; i < values.length; i++) {
+                const count = Math.floor(num / values[i]);
+                result += symbols[i].repeat(count);
+                num %= values[i];
+            }
+            return result || '𓏺';
+        }
+
+        function toBabylonian(num) {
+            const base60 = [];
+            while (num > 0) {
+                base60.unshift(num % 60);
+                num = Math.floor(num / 60);
+            }
+            return base60.length > 0 ? base60.join(', ') : '0';
+        }
+
+        function convertToSpecific(system) {
+            const decimal = parseInt(document.getElementById('decimalInput').value) || 42;
+            let result = '';
+            
+            switch(system) {
+                case 'roman':
+                    result = `${decimal} en Romano: <strong>${toRoman(decimal)}</strong>`;
+                    break;
+                case 'egyptian':
+                    result = `${decimal} en Egipcio: <strong>${toEgyptian(decimal)}</strong>`;
+                    break;
+                case 'binary':
+                    result = `${decimal} en Binario: <strong>${decimal.toString(2)}</strong>`;
+                    break;
+                case 'babylonian':
+                    result = `${decimal} en Babilónico: <strong>${toBabylonian(decimal)}</strong>`;
+                    break;
+            }
+            
+            document.getElementById('conversionResults').innerHTML = result;
+            updateScore(3);
+        }
+
+        function startConversionGame() {
+            const systems = [
+                {from: 'decimal', to: 'roman', name: 'Romano'},
+                {from: 'roman', to: 'decimal', name: 'Decimal'},
+                {from: 'decimal', to: 'binary', name: 'Binario'},
+                {from: 'binary', to: 'decimal', name: 'Decimal'}
+            ];
+            
+            const challenge = systems[Math.floor(Math.random() * systems.length)];
+            let question = '';
+            let answer = '';
+            
+            if (challenge.from === 'decimal' && challenge.to === 'roman') {
+                const num = Math.floor(Math.random() * 100) + 1;
+                question = `Convierte ${num} a números romanos`;
+                answer = toRoman(num);
+            } else if (challenge.from === 'roman' && challenge.to === 'decimal') {
+                const num = Math.floor(Math.random() * 50) + 1;
+                const roman = toRoman(num);
+                question = `¿Qué número decimal es ${roman}?`;
+                answer = num.toString();
+            } else if (challenge.from === 'decimal' && challenge.to === 'binary') {
+                const num = Math.floor(Math.random() * 32) + 1;
+                question = `Convierte ${num} a binario`;
+                answer = num.toString(2);
+            } else if (challenge.from === 'binary' && challenge.to === 'decimal') {
+                const num = Math.floor(Math.random() * 32) + 1;
+                const binary = num.toString(2);
+                question = `¿Qué número decimal es ${binary} en binario?`;
+                answer = num.toString();
+            }
+            
+            currentConversionChallenge = {question, answer};
+            document.getElementById('conversionGame').innerHTML = `<strong>🎯 Desafío:</strong> ${question}`;
+            document.getElementById('conversionAnswer').value = '';
+        }
+
+        function checkConversionAnswer() {
+            const userAnswer = document.getElementById('conversionAnswer').value.trim().toUpperCase();
+            const correctAnswer = currentConversionChallenge.answer.toUpperCase();
+            
+            if (userAnswer === correctAnswer) {
+                conversionGameScore++;
+                document.getElementById('conversionGame').innerHTML = 
+                    `<strong style="color: green;">✅ ¡Correcto!</strong><br>
+                    ${currentConversionChallenge.question}<br>
+                    Respuesta: ${currentConversionChallenge.answer}`;
+                updateScore(10);
+                showCelebration('¡Excelente conversión!');
+            } else {
+                document.getElementById('conversionGame').innerHTML = 
+                    `<strong style="color: red;">❌ Incorrecto</strong><br>
+                    ${currentConversionChallenge.question}<br>
+                    La respuesta correcta era: ${currentConversionChallenge.answer}`;
+            }
+            
+            document.getElementById('conversionScore').textContent = `Conversiones correctas: ${conversionGameScore}`;
+        }
+
+        const triviaQuestions = [
+            {
+                question: "¿En qué civilización se inventó el cero?",
+                answer: "India",
+                options: ["India", "Babilonia", "Egipto", "Grecia"]
+            },
+            {
+                question: "¿Qué significa 'calculus' en latín?",
+                answer: "Piedrecita",
+                options: ["Piedrecita", "Número", "Contar", "Matemática"]
+            },
+            {
+                question: "¿En qué año Fibonacci escribió el Liber Abaci?",
+                answer: "1202",
+                options: ["1202", "1150", "1250", "1300"]
+            },
+            {
+                question: "¿Qué base usaban los babilonios?",
+                answer: "60",
+                options: ["60", "10", "12", "20"]
+            },
+            {
+                question: "¿Cómo se llama 'cero' en sánscrito?",
+                answer: "Shunya",
+                options: ["Shunya", "Brahma", "Kali", "Vishnu"]
+            }
+        ];
+
+        function newGameQuestion() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            gameTime = 60;
+            document.getElementById('gameScore').textContent = '0';
+            
+            gameTimer = setInterval(() => {
+                gameTime--;
+                document.getElementById('gameTime').textContent = gameTime;
+                document.getElementById('gameProgress').style.width = ((60 - gameTime) / 60 * 100) + '%';
+                
+                if (gameTime <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            generateGameQuestion();
+        }
+
+        function generateGameQuestion() {
+            if (!gameActive) return;
+
+            const question = triviaQuestions[Math.floor(Math.random() * triviaQuestions.length)];
+            currentGameAnswer = question.answer;
+            
+            document.getElementById('questionText').innerHTML = `
+                <strong>${question.question}</strong><br>
+                <div style="margin-top: 10px;">
+                    ${question.options.map(opt => 
+                        `<button class="btn" onclick="selectOption('${opt}')" style="margin: 5px; padding: 8px 12px; font-size: 14px;">${opt}</button>`
+                    ).join('')}
+                </div>
+            `;
+            document.getElementById('gameAnswer').style.display = 'none';
+            document.getElementById('gameResult').textContent = '';
+        }
+
+        function selectOption(option) {
+            document.getElementById('gameAnswer').value = option;
+            checkGameAnswer();
+        }
+
+        function checkGameAnswer() {
+            if (!gameActive) return;
+
+            const userAnswer = document.getElementById('gameAnswer').value.trim();
+            const resultDiv = document.getElementById('gameResult');
+            
+            if (userAnswer.toLowerCase() === currentGameAnswer.toLowerCase()) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Correcto! +15 puntos</span>';
+                updateScore(15);
+                let currentScore = parseInt(document.getElementById('gameScore').textContent);
+                document.getElementById('gameScore').textContent = currentScore + 1;
+                
+                setTimeout(() => {
+                    generateGameQuestion();
+                }, 1500);
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. La respuesta era: ${currentGameAnswer}</span>`;
+                
+                setTimeout(() => {
+                    generateGameQuestion();
+                }, 2000);
+            }
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            const finalScore = parseInt(document.getElementById('gameScore').textContent);
+            let message = '';
+            
+            if (finalScore >= 10) {
+                message = '🏆 ¡Eres un experto en historia matemática!';
+            } else if (finalScore >= 7) {
+                message = '🎯 ¡Excelente conocimiento histórico!';
+            } else if (finalScore >= 4) {
+                message = '👍 ¡Buen trabajo explorando la historia!';
+            } else {
+                message = '💪 ¡Sigue descubriendo más sobre los números!';
+            }
+            
+            showCelebration(message + ` Respondiste ${finalScore} preguntas correctamente.`);
+            
+            document.getElementById('questionText').innerHTML = '¡Juego terminado! Presiona "Nueva Pregunta" para jugar otra vez.';
+            document.getElementById('gameProgress').style.width = '0%';
+            gameTime = 60;
+            document.getElementById('gameTime').textContent = gameTime;
+            document.getElementById('gameAnswer').style.display = 'inline-block';
+        }
+
+        function startArchaeologyGame() {
+            const discoveries = [
+                {
+                    site: "Cueva de Blombos, Sudáfrica",
+                    period: "70,000 a.C.",
+                    finding: "Marcas en ocre rojo - ¿primeros símbolos matemáticos?",
+                    significance: "Evidencia temprana de pensamiento abstracto"
+                },
+                {
+                    site: "Lebombo, Suazilandia", 
+                    period: "35,000 a.C.",
+                    finding: "Hueso con 29 marcas - ¿calendario lunar?",
+                    significance: "Posible seguimiento de ciclos naturales"
+                },
+                {
+                    site: "Ishango, Congo",
+                    period: "20,000 a.C.", 
+                    finding: "Hueso con series numéricas complejas",
+                    significance: "Conocimiento de números primos y duplicación"
+                },
+                {
+                    site: "Jiahu, China",
+                    period: "8,000 a.C.",
+                    finding: "Símbolos en caparazones de tortuga",
+                    significance: "Precursores de la escritura numérica china"
+                },
+                {
+                    site: "Uruk, Mesopotamia",
+                    period: "3,200 a.C.",
+                    finding: "Primeras tablillas con números cuneiformes",
+                    significance: "Inicio de la escritura numérica formal"
+                }
+            ];
+
+            const discovery = discoveries[Math.floor(Math.random() * discoveries.length)];
+            
+            document.getElementById('archaeologyGame').innerHTML = `
+                <div style="background: linear-gradient(135deg, #8B4513, #D2691E); color: white; padding: 20px; border-radius: 10px;">
+                    <h4>🏺 ¡Nueva Excavación!</h4>
+                    <div style="background: rgba(255,255,255,0.9); color: #333; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                        <p><strong>📍 Sitio:</strong> ${discovery.site}</p>
+                        <p><strong>📅 Período:</strong> ${discovery.period}</p>
+                        <p><strong>🔍 Hallazgo:</strong> ${discovery.finding}</p>
+                        <p><strong>💡 Importancia:</strong> ${discovery.significance}</p>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="btn" onclick="startArchaeologyGame()">🔍 Nueva Excavación</button>
+                        <button class="btn" onclick="catalogDiscovery('${discovery.site}')">📚 Catalogar Descubrimiento</button>
+                    </div>
+                </div>
+            `;
+            
+            updateScore(12);
+        }
+
+        function catalogDiscovery(site) {
+            showCelebration(`¡Descubrimiento de ${site} catalogado! Has contribuido al conocimiento histórico.`);
+            updateScore(8);
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de timeline
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Efectos en botones
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Atajos de teclado
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && gameActive) {
+                    checkGameAnswer();
+                }
+                
+                if (event.key === 'Escape') {
+                    closeCelebration();
+                }
+            });
+        });
+
+        // Datos históricos adicionales
+        const historicalFacts = [
+            "Los antiguos comerciantes fenicios ayudaron a difundir los sistemas numéricos por el Mediterráneo.",
+            "El concepto de 'infinito' fue desarrollado por matemáticos indios mucho antes que en Europa.",
+            "Los números negativos fueron aceptados primero en China e India, pero rechazados en Europa por siglos.",
+            "El símbolo '+' para suma no se usó hasta el siglo XV en Europa.",
+            "Los decimales se usaron en China desde el siglo I, pero llegaron a Europa en el siglo XVI.",
+            "La palabra 'algoritmo' viene de Al-Juarismi, el matemático persa del siglo IX.",
+            "Los antiguos egipcios podían hacer fracciones, pero solo con numerador 1 (excepto 2/3)."
+        ];
+
+        function showRandomFact() {
+            const fact = historicalFacts[Math.floor(Math.random() * historicalFacts.length)];
+            showCelebration(`💡 Dato histórico: ${fact}`);
+        }
+
+        // Mostrar datos históricos periódicamente
+        setInterval(showRandomFact, 180000); // Cada 3 minutos
+
+        // Sistema de logros
+        const achievements = {
+            'first_discovery': { name: 'Primer Descubrimiento', points: 50, unlocked: false },
+            'history_expert': { name: 'Experto en Historia', points: 100, unlocked: false },
+            'conversion_master': { name: 'Maestro de Conversiones', points: 75, unlocked: false },
+            'archaeologist': { name: 'Arqueólogo Números', points: 60, unlocked: false }
+        };
+
+        function checkAchievements() {
+            if (discoveries >= 5 && !achievements.first_discovery.unlocked) {
+                achievements.first_discovery.unlocked = true;
+                showCelebration(`🏆 ¡Logro desbloqueado! ${achievements.first_discovery.name}`);
+                updateScore(achievements.first_discovery.points);
+            }
+            
+            if (totalScore >= 200 && !achievements.history_expert.unlocked) {
+                achievements.history_expert.unlocked = true;
+                showCelebration(`🏆 ¡Logro desbloqueado! ${achievements.history_expert.name}`);
+                updateScore(achievements.history_expert.points);
+            }
+            
+            if (conversionGameScore >= 10 && !achievements.conversion_master.unlocked) {
+                achievements.conversion_master.unlocked = true;
+                showCelebration(`🏆 ¡Logro desbloqueado! ${achievements.conversion_master.name}`);
+                updateScore(achievements.conversion_master.points);
+            }
+        }
+
+        // Verificar logros periódicamente
+        setInterval(checkAchievements, 5000);
+
+        // Función para reiniciar progreso
+        function resetProgress() {
+            if (confirm('¿Estás seguro de que quieres reiniciar tu progreso de exploración histórica?')) {
+                totalScore = 0;
+                discoveries = 0;
+                conversionGameScore = 0;
+                document.getElementById('totalScore').textContent = '0';
+                document.getElementById('discoveries').textContent = '0';
+                
+                // Reiniciar logros
+                for (let key in achievements) {
+                    achievements[key].unlocked = false;
+                }
+                
+                showCelebration('¡Progreso reiniciado! ¡Comienza una nueva aventura histórica! 🚀');
+            }
+        }
+
+        // Función para compartir progreso
+        function shareProgress() {
+            const message = `¡He descubierto ${discoveries} secretos matemáticos y conseguido ${totalScore} puntos explorando la historia de los números naturales! 📜✨`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi Viaje por la Historia Matemática',
+                    text: message,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(message).then(() => {
+                    showCelebration('¡Progreso copiado al portapapeles!');
+                });
+            }
+        }
+
+        // Simulador de evolución de números
+        function simulateEvolution() {
+            const stages = [
+                { period: "Paleolítico", method: "Marcas en huesos", symbol: "||||" },
+                { period: "Neolítico", method: "Piedras y nudos", symbol: "●●●●" },
+                { period: "Antigüedad", method: "Símbolos específicos", symbol: "𓏺𓏺𓏺𓏺" },
+                { period: "Clásico", method: "Sistemas posicionales", symbol: "IIII" },
+                { period: "Medieval", method: "Números indoarábigos", symbol: "4" }
+            ];
+            
+            let currentStage = 0;
+            const evolutionDiv = document.createElement('div');
+            evolutionDiv.style.cssText = `
+                position: fixed; top: 20%; left: 50%; transform: translateX(-50%);
+                background: white; padding: 30px; border-radius: 15px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 1001;
+                text-align: center; min-width: 300px;
+            `;
+            
+            function showStage() {
+                if (currentStage < stages.length) {
+                    const stage = stages[currentStage];
+                    evolutionDiv.innerHTML = `
+                        <h3>📈 Evolución del Número 4</h3>
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <h4>${stage.period}</h4>
+                            <div style="font-size: 32px; margin: 10px 0;">${stage.symbol}</div>
+                            <p>${stage.method}</p>
+                        </div>
+                        <button class="btn" onclick="nextStage()" style="margin: 10px;">Siguiente →</button>
+                        <button class="btn" onclick="closeEvolution()" style="margin: 10px;">Cerrar</button>
+                    `;
+                    currentStage++;
+                } else {
+                    evolutionDiv.innerHTML = `
+                        <h3>🎉 ¡Evolución Completa!</h3>
+                        <p>Has visto como el número 4 evolucionó a través de miles de años.</p>
+                        <p><strong>¡Un viaje de 40,000 años de innovación humana!</strong></p>
+                        <button class="btn" onclick="closeEvolution()">Cerrar</button>
+                    `;
+                    updateScore(25);
+                }
+            }
+            
+            window.nextStage = showStage;
+            window.closeEvolution = () => {
+                document.body.removeChild(evolutionDiv);
+                delete window.nextStage;
+                delete window.closeEvolution;
+            };
+            
+            document.body.appendChild(evolutionDiv);
+            showStage();
+        }
+
+        // Agregar botón de evolución a la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const introSection = document.getElementById('intro');
+            const evolutionButton = document.createElement('button');
+            evolutionButton.className = 'btn';
+            evolutionButton.style.cssText = 'font-size: 16px; margin: 10px;';
+            evolutionButton.textContent = '📈 Ver Evolución del Número 4';
+            evolutionButton.onclick = simulateEvolution;
+            
+            const buttonContainer = introSection.querySelector('div[style*="text-align: center"]');
+            if (buttonContainer) {
+                buttonContainer.appendChild(evolutionButton);
+            }
+        });
+    </script>
+</body>
+</html>

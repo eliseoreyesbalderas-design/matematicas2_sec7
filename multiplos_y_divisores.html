@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Múltiplos y Divisores - Aventura Matemática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            min-width: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #333;
+            min-height: 50px;
+            font-size: 16px;
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 5px;
+            margin: 20px 0;
+            max-width: 600px;
+        }
+
+        .grid-cell {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grid-cell.multiple {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            border-color: #ff6b6b;
+            animation: pulse 1s ease-in-out;
+        }
+
+        .grid-cell.divisor {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            border-color: #4ecdc4;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .pattern-visualizer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pattern-block {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .nav-tabs { gap: 5px; }
+            .tab-btn { padding: 8px 16px; font-size: 14px; }
+            .container { padding: 10px; }
+            .section { padding: 20px; }
+            .visual-grid { grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); }
+            .grid-cell { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Aventura Matemática: Múltiplos y Divisores</h1>
+        <p style="font-size: 18px; color: #666;">¡Descubre patrones increíbles en los números!</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🚀 Inicio</button>
+            <button class="tab-btn" onclick="showSection('multiples')">✖️ Múltiplos</button>
+            <button class="tab-btn" onclick="showSection('divisors')">➗ Divisores</button>
+            <button class="tab-btn" onclick="showSection('patterns')">🔍 Patrones</button>
+            <button class="tab-btn" onclick="showSection('games')">🎮 Juegos</button>
+            <button class="tab-btn" onclick="showSection('challenges')">🏆 Desafíos</button>
+        </div>
+
+        <div class="score-board">
+            🌟 Puntos: <span id="totalScore">0</span> | 🔥 Racha: <span id="streak">0</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Introducción -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 20px;">🎯 ¡Bienvenido a tu aventura matemática!</h2>
+            <p style="font-size: 18px; line-height: 1.6; text-align: center;">
+                Los números esconden secretos increíbles. Los múltiplos y divisores son como llaves que abren patrones ocultos en el mundo que nos rodea. 
+                ¿Estás listo para convertirte en un detective de números?
+            </p>
+            
+            <div class="activity-card">
+                <h3>🎯 Tu misión:</h3>
+                <ul style="font-size: 16px; line-height: 1.8;">
+                    <li>Explorar cómo se forman los múltiplos</li>
+                    <li>Descubrir los divisores ocultos de cada número</li>
+                    <li>Encontrar patrones sorprendentes</li>
+                    <li>Jugar y practicar con desafíos divertidos</li>
+                    <li>Aplicar lo aprendido en situaciones reales</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('multiples')" style="font-size: 18px;">
+                    🚀 ¡Comenzar la aventura!
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Múltiplos -->
+        <div class="section" id="multiples">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">✖️ Explorando los Múltiplos</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Generador Visual de Múltiplos</h3>
+                <p>Imagina que das saltos de igual tamaño. ¡Los múltiplos son los números donde caes!</p>
+                
+                <div class="input-group">
+                    <label>Número base:</label>
+                    <input type="number" id="multipleBase" min="1" max="12" value="3">
+                    <button class="btn" onclick="generateMultiples()">🎯 Generar</button>
+                    <button class="btn" onclick="clearMultiples()">🧹 Limpiar</button>
+                </div>
+
+                <div id="multiplesResult" class="result-box"></div>
+                <div id="multiplesGrid" class="visual-grid"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🔍 Detector de Múltiplos</h3>
+                <p>¿Es este número un múltiplo? ¡Averígualo!</p>
+                
+                <div class="input-group">
+                    <label>¿Es</label>
+                    <input type="number" id="testNumber" min="1" value="15">
+                    <label>múltiplo de</label>
+                    <input type="number" id="testBase" min="1" max="12" value="3">
+                    <button class="btn" onclick="testMultiple()">🔍 Verificar</button>
+                </div>
+
+                <div id="multipleTestResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Divisores -->
+        <div class="section" id="divisors">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">➗ Descubriendo los Divisores</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Cazador de Divisores</h3>
+                <p>Los divisores son como piezas de un rompecabezas que encajan perfectamente en un número.</p>
+                
+                <div class="input-group">
+                    <label>Encuentra los divisores de:</label>
+                    <input type="number" id="divisorNumber" min="1" max="100" value="24">
+                    <button class="btn" onclick="findDivisors()">🎯 Encontrar</button>
+                </div>
+
+                <div id="divisorsResult" class="result-box"></div>
+                <div id="divisorPairs" class="result-box"></div>
+                <div id="divisorsGrid" class="visual-grid"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🏗️ Constructor de Números</h3>
+                <p>¿Qué número tiene exactamente estos divisores?</p>
+                
+                <div class="input-group">
+                    <label>Divisores deseados:</label>
+                    <input type="text" id="desiredDivisors" placeholder="1,2,3,4,6,12" style="min-width: 200px;">
+                    <button class="btn" onclick="buildNumber()">🏗️ Construir</button>
+                </div>
+
+                <div id="buildResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Patrones -->
+        <div class="section" id="patterns">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🔍 Patrones Increíbles</h2>
+            
+            <div class="activity-card">
+                <h3>🌈 Visualizador de Patrones</h3>
+                <p>¡Observa cómo los múltiplos crean patrones visuales increíbles!</p>
+                
+                <div class="input-group">
+                    <label>Múltiplos de:</label>
+                    <input type="number" id="patternBase1" min="2" max="10" value="2">
+                    <label>y</label>
+                    <input type="number" id="patternBase2" min="2" max="10" value="3">
+                    <button class="btn" onclick="createPattern()">🌈 Crear Patrón</button>
+                </div>
+
+                <div id="patternResult" class="result-box"></div>
+                <div id="patternVisualizer" class="pattern-visualizer"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🧮 Calculadora de MCM y MCD</h3>
+                <p>Encuentra el Mínimo Común Múltiplo y Máximo Común Divisor</p>
+                
+                <div class="input-group">
+                    <input type="number" id="mcmNum1" min="1" max="50" value="12">
+                    <label>y</label>
+                    <input type="number" id="mcmNum2" min="1" max="50" value="18">
+                    <button class="btn" onclick="calculateMcmMcd()">🧮 Calcular</button>
+                </div>
+
+                <div id="mcmMcdResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Juegos -->
+        <div class="section" id="games">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🎮 Juegos Matemáticos</h2>
+            
+            <div class="game-area">
+                <h3>⚡ Desafío Relámpago</h3>
+                <p>¡Responde lo más rápido que puedas!</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gameProgress"></div>
+                </div>
+
+                <div id="gameQuestion" class="quiz-card">
+                    <h4 id="questionText">¡Presiona "Nueva Pregunta" para comenzar!</h4>
+                    <div class="input-group" style="justify-content: center;">
+                        <input type="number" id="gameAnswer" placeholder="Tu respuesta">
+                        <button class="btn" onclick="checkGameAnswer()">✅ Responder</button>
+                        <button class="btn" onclick="newGameQuestion()">🎯 Nueva Pregunta</button>
+                    </div>
+                    <div id="gameResult" style="margin-top: 10px; font-weight: bold;"></div>
+                </div>
+
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">⏱️</div>
+                        <div>Tiempo: <span id="gameTime">60</span>s</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px;">🎯</div>
+                        <div>Correctas: <span id="gameScore">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Desafíos -->
+        <div class="section" id="challenges">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🏆 Desafíos Épicos</h2>
+            
+            <div class="activity-card">
+                <h3>🧩 Rompecabezas de Números</h3>
+                <div class="quiz-card">
+                    <p><strong>Desafío 1:</strong> Si hoy es martes y han pasado 15 días, ¿qué día de la semana será?</p>
+                    <div class="input-group">
+                        <input type="text" id="challenge1" placeholder="Día de la semana">
+                        <button class="btn" onclick="checkChallenge(1)">Verificar</button>
+                    </div>
+                    <div id="result1" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 2:</strong> En una caja hay exactamente 36 caramelos. ¿De cuántas maneras diferentes puedes repartirlos en grupos iguales?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge2" placeholder="Número de maneras">
+                        <button class="btn" onclick="checkChallenge(2)">Verificar</button>
+                    </div>
+                    <div id="result2" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 3:</strong> El MCM de 12 y 18 multiplicado por su MCD es igual a:</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge3" placeholder="Resultado">
+                        <button class="btn" onclick="checkChallenge(3)">Verificar</button>
+                    </div>
+                    <div id="result3" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🌍 Aplicaciones en la Vida Real</h3>
+                <div class="quiz-card">
+                    <h4>🎵 Música y Ritmo</h4>
+                    <p>Una canción tiene un compás de 4/4. Si cada compás dura 2 segundos, ¿cada cuántos segundos se repite el patrón rítmico?</p>
+                    <div class="input-group">
+                        <input type="number" id="musicChallenge" placeholder="Segundos">
+                        <button class="btn" onclick="checkMusicChallenge()">🎵 Verificar</button>
+                    </div>
+                    <div id="musicResult" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>⚽ Deportes</h4>
+                    <p>En un torneo, los equipos se organizan en grupos iguales. Si hay 24 equipos, ¿cuántas configuraciones diferentes de grupos son posibles?</p>
+                    <div class="input-group">
+                        <input type="number" id="sportsChallenge" placeholder="Configuraciones">
+                        <button class="btn" onclick="checkSportsChallenge()">⚽ Verificar</button>
+                    </div>
+                    <div id="sportsResult" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>🎉 ¡Excelente trabajo!</h2>
+        <p id="celebrationMessage"></p>
+        <button class="btn" onclick="closeCelebration()">Continuar</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let streak = 0;
+        let gameTime = 60;
+        let gameActive = false;
+        let gameTimer;
+        let currentGameAnswer = 0;
+
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Actualizar botones de navegación
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateScore(points) {
+            totalScore += points;
+            streak += 1;
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function resetStreak() {
+            streak = 0;
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function showCelebration(message) {
+            document.getElementById('celebrationMessage').textContent = message;
+            document.getElementById('celebration').style.display = 'block';
+            setTimeout(() => {
+                closeCelebration();
+            }, 2000);
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebration').style.display = 'none';
+        }
+
+        function generateMultiples() {
+            const base = parseInt(document.getElementById('multipleBase').value);
+            if (!base) return;
+
+            let multiples = [];
+            for (let i = 1; i <= 12; i++) {
+                multiples.push(base * i);
+            }
+
+            document.getElementById('multiplesResult').innerHTML = 
+                `<strong>Los múltiplos de ${base} son:</strong><br>` +
+                multiples.map(m => `<span style="color: #e74c3c; font-weight: bold;">${m}</span>`).join(', ');
+
+            // Visualización en grid
+            const grid = document.getElementById('multiplesGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = i;
+                if (i % base === 0) {
+                    cell.classList.add('multiple');
+                }
+                grid.appendChild(cell);
+            }
+
+            updateScore(10);
+        }
+
+        function clearMultiples() {
+            document.getElementById('multiplesGrid').innerHTML = '';
+            document.getElementById('multiplesResult').innerHTML = '';
+        }
+
+        function testMultiple() {
+            const number = parseInt(document.getElementById('testNumber').value);
+            const base = parseInt(document.getElementById('testBase').value);
+            
+            if (!number || !base) return;
+
+            const isMultiple = number % base === 0;
+            const quotient = Math.floor(number / base);
+            
+            document.getElementById('multipleTestResult').innerHTML = 
+                `<strong>¿Es ${number} múltiplo de ${base}?</strong><br>` +
+                `<span style="color: ${isMultiple ? 'green' : 'red'}; font-size: 18px;">` +
+                `${isMultiple ? '✅ ¡SÍ!' : '❌ No'}</span><br>` +
+                `${isMultiple ? `${number} = ${base} × ${quotient}` : `${number} ÷ ${base} = ${quotient} con residuo ${number % base}`}`;
+
+            if (isMultiple) updateScore(5);
+        }
+
+        function findDivisors() {
+            const number = parseInt(document.getElementById('divisorNumber').value);
+            if (!number) return;
+
+            let divisors = [];
+            let pairs = [];
+            
+            for (let i = 1; i <= number; i++) {
+                if (number % i === 0) {
+                    divisors.push(i);
+                }
+            }
+
+            // Encontrar pares
+            for (let i = 0; i < divisors.length / 2; i++) {
+                const pair1 = divisors[i];
+                const pair2 = divisors[divisors.length - 1 - i];
+                if (pair1 !== pair2) {
+                    pairs.push(`${pair1} × ${pair2} = ${number}`);
+                } else {
+                    pairs.push(`${pair1}² = ${number}`);
+                    break;
+                }
+            }
+
+            document.getElementById('divisorsResult').innerHTML = 
+                `<strong>Los divisores de ${number} son:</strong><br>` +
+                divisors.map(d => `<span style="color: #3498db; font-weight: bold;">${d}</span>`).join(', ');
+
+            document.getElementById('divisorPairs').innerHTML = 
+                `<strong>Pares de divisores:</strong><br>` + pairs.join('<br>');
+
+            // Visualización
+            const grid = document.getElementById('divisorsGrid');
+            grid.innerHTML = '';
+            divisors.forEach(d => {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell divisor';
+                cell.textContent = d;
+                cell.style.background = 'linear-gradient(45deg, #a8edea, #fed6e3)';
+                grid.appendChild(cell);
+            });
+
+            updateScore(15);
+        }
+
+        function createPattern() {
+            const base1 = parseInt(document.getElementById('patternBase1').value);
+            const base2 = parseInt(document.getElementById('patternBase2').value);
+            
+            if (!base1 || !base2) return;
+
+            const visualizer = document.getElementById('patternVisualizer');
+            visualizer.innerHTML = '';
+
+            for (let i = 1; i <= 50; i++) {
+                const block = document.createElement('div');
+                block.className = 'pattern-block';
+                block.textContent = i;
+                
+                const isMultiple1 = i % base1 === 0;
+                const isMultiple2 = i % base2 === 0;
+                
+                if (isMultiple1 && isMultiple2) {
+                    block.style.background = 'linear-gradient(45deg, #ff6b6b, #feca57)';
+                } else if (isMultiple1) {
+                    block.style.background = 'linear-gradient(45deg, #4ecdc4, #44a08d)';
+                } else if (isMultiple2) {
+                    block.style.background = 'linear-gradient(45deg, #ff9a9e, #fecfef)';
+                } else {
+                    block.style.background = '#ddd';
+                    block.style.color = '#666';
+                }
+                
+                visualizer.appendChild(block);
+            }
+
+            // Calcular MCM
+            const mcm = (base1 * base2) / gcd(base1, base2);
+            document.getElementById('patternResult').innerHTML = 
+                `<strong>Patrón creado:</strong><br>` +
+                `🔵 Azul: Múltiplos de ${base1}<br>` +
+                `🔴 Rosa: Múltiplos de ${base2}<br>` +
+                `🟡 Amarillo: Múltiplos comunes (cada ${mcm} números)<br>` +
+                `El patrón se repite cada ${mcm} números.`;
+
+            updateScore(20);
+        }
+
+        function gcd(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        function calculateMcmMcd() {
+            const num1 = parseInt(document.getElementById('mcmNum1').value);
+            const num2 = parseInt(document.getElementById('mcmNum2').value);
+            
+            if (!num1 || !num2) return;
+
+            const mcdValue = gcd(num1, num2);
+            const mcmValue = (num1 * num2) / mcdValue;
+
+            document.getElementById('mcmMcdResult').innerHTML = 
+                `<strong>Resultados para ${num1} y ${num2}:</strong><br>` +
+                `🔢 MCD (Máximo Común Divisor): <span style="color: #e74c3c; font-size: 18px;">${mcdValue}</span><br>` +
+                `🔢 MCM (Mínimo Común Múltiplo): <span style="color: #3498db; font-size: 18px;">${mcmValue}</span><br>` +
+                `💡 Dato curioso: ${num1} × ${num2} = ${num1 * num2} = MCD × MCM = ${mcdValue} × ${mcmValue}`;
+
+            updateScore(25);
+        }
+
+        function newGameQuestion() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            gameTime = 60;
+            document.getElementById('gameScore').textContent = '0';
+            
+            // Iniciar timer
+            gameTimer = setInterval(() => {
+                gameTime--;
+                document.getElementById('gameTime').textContent = gameTime;
+                document.getElementById('gameProgress').style.width = ((60 - gameTime) / 60 * 100) + '%';
+                
+                if (gameTime <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            generateGameQuestion();
+        }
+
+        function generateGameQuestion() {
+            if (!gameActive) return;
+
+            const questionTypes = [
+                'multiple', 'divisor', 'mcm', 'mcd', 'count_divisors'
+            ];
+            
+            const type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            const num1 = Math.floor(Math.random() * 20) + 2;
+            const num2 = Math.floor(Math.random() * 20) + 2;
+            
+            let question = '';
+            let answer = 0;
+
+            switch(type) {
+                case 'multiple':
+                    const multiple = num1 * (Math.floor(Math.random() * 5) + 2);
+                    question = `¿Es ${multiple} múltiplo de ${num1}? (1=Sí, 0=No)`;
+                    answer = multiple % num1 === 0 ? 1 : 0;
+                    break;
+                    
+                case 'divisor':
+                    question = `¿Cuántos divisores tiene ${num1 * num2}?`;
+                    answer = countDivisors(num1 * num2);
+                    break;
+                    
+                case 'mcm':
+                    question = `¿Cuál es el MCM de ${num1} y ${num2}?`;
+                    answer = (num1 * num2) / gcd(num1, num2);
+                    break;
+                    
+                case 'mcd':
+                    question = `¿Cuál es el MCD de ${num1} y ${num2}?`;
+                    answer = gcd(num1, num2);
+                    break;
+                    
+                case 'count_divisors':
+                    question = `¿Cuántos divisores tiene ${num1}?`;
+                    answer = countDivisors(num1);
+                    break;
+            }
+
+            currentGameAnswer = answer;
+            document.getElementById('questionText').textContent = question;
+            document.getElementById('gameAnswer').value = '';
+            document.getElementById('gameResult').textContent = '';
+        }
+
+        function countDivisors(n) {
+            let count = 0;
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) count++;
+            }
+            return count;
+        }
+
+        function checkGameAnswer() {
+            if (!gameActive) return;
+
+            const userAnswer = parseInt(document.getElementById('gameAnswer').value);
+            const resultDiv = document.getElementById('gameResult');
+            
+            if (userAnswer === currentGameAnswer) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Correcto! +10 puntos</span>';
+                updateScore(10);
+                let currentScore = parseInt(document.getElementById('gameScore').textContent);
+                document.getElementById('gameScore').textContent = currentScore + 1;
+                
+                setTimeout(() => {
+                    generateGameQuestion();
+                }, 1000);
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. La respuesta era ${currentGameAnswer}</span>`;
+                resetStreak();
+                
+                setTimeout(() => {
+                    generateGameQuestion();
+                }, 1500);
+            }
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            const finalScore = parseInt(document.getElementById('gameScore').textContent);
+            let message = '';
+            
+            if (finalScore >= 15) {
+                message = '🏆 ¡Eres un genio matemático!';
+            } else if (finalScore >= 10) {
+                message = '🎯 ¡Excelente trabajo!';
+            } else if (finalScore >= 5) {
+                message = '👍 ¡Buen intento!';
+            } else {
+                message = '💪 ¡Sigue practicando!';
+            }
+            
+            showCelebration(message + ` Respondiste ${finalScore} preguntas correctamente.`);
+            
+            document.getElementById('questionText').textContent = '¡Juego terminado! Presiona "Nueva Pregunta" para jugar otra vez.';
+            document.getElementById('gameProgress').style.width = '0%';
+            gameTime = 60;
+            document.getElementById('gameTime').textContent = gameTime;
+        }
+
+        function checkChallenge(challengeNumber) {
+            let userAnswer, correctAnswer, explanation;
+            
+            switch(challengeNumber) {
+                case 1:
+                    userAnswer = document.getElementById('challenge1').value.toLowerCase().trim();
+                    correctAnswer = 'miércoles';
+                    explanation = '15 días = 2 semanas + 1 día. Si hoy es martes, en 15 días será miércoles.';
+                    
+                    if (userAnswer === correctAnswer || userAnswer === 'miercoles') {
+                        document.getElementById('result1').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(30);
+                        showCelebration('¡Resolviste el desafío del calendario!');
+                    } else {
+                        document.getElementById('result1').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+                    
+                case 2:
+                    userAnswer = parseInt(document.getElementById('challenge2').value);
+                    correctAnswer = countDivisors(36);
+                    explanation = `36 tiene ${correctAnswer} divisores: ${getDivisors(36).join(', ')}. Cada divisor representa una forma de agrupar.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result2').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(35);
+                        showCelebration('¡Maestro de los divisores!');
+                    } else {
+                        document.getElementById('result2').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+                    
+                case 3:
+                    userAnswer = parseInt(document.getElementById('challenge3').value);
+                    const mcd12_18 = gcd(12, 18);
+                    const mcm12_18 = (12 * 18) / mcd12_18;
+                    correctAnswer = mcd12_18 * mcm12_18;
+                    explanation = `MCD(12,18) = ${mcd12_18}, MCM(12,18) = ${mcm12_18}. ${mcd12_18} × ${mcm12_18} = ${correctAnswer}`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result3').innerHTML = 
+                            `<span style="color: green;">✅ ¡Correcto!</span><br>${explanation}`;
+                        updateScore(40);
+                        showCelebration('¡Experto en MCM y MCD!');
+                    } else {
+                        document.getElementById('result3').innerHTML = 
+                            `<span style="color: red;">❌ Incorrecto.</span><br>${explanation}`;
+                    }
+                    break;
+            }
+        }
+
+        function getDivisors(n) {
+            let divisors = [];
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) divisors.push(i);
+            }
+            return divisors;
+        }
+
+        function checkMusicChallenge() {
+            const userAnswer = parseInt(document.getElementById('musicChallenge').value);
+            const correctAnswer = 2; // Cada compás dura 2 segundos
+            
+            if (userAnswer === correctAnswer) {
+                document.getElementById('musicResult').innerHTML = 
+                    '<span style="color: green;">✅ ¡Correcto!</span><br>El patrón se repite cada 2 segundos (duración de un compás).';
+                updateScore(25);
+            } else {
+                document.getElementById('musicResult').innerHTML = 
+                    '<span style="color: red;">❌ Incorrecto.</span><br>El patrón se repite cada 2 segundos (duración de un compás).';
+            }
+        }
+
+        function checkSportsChallenge() {
+            const userAnswer = parseInt(document.getElementById('sportsChallenge').value);
+            const correctAnswer = countDivisors(24);
+            
+            if (userAnswer === correctAnswer) {
+                document.getElementById('sportsResult').innerHTML = 
+                    `<span style="color: green;">✅ ¡Correcto!</span><br>24 equipos se pueden organizar en ${correctAnswer} configuraciones diferentes: ${getDivisors(24).join(', ')} equipos por grupo.`;
+                updateScore(30);
+            } else {
+                document.getElementById('sportsResult').innerHTML = 
+                    `<span style="color: red;">❌ Incorrecto.</span><br>24 equipos se pueden organizar en ${correctAnswer} configuraciones diferentes: ${getDivisors(24).join(', ')} equipos por grupo.`;
+            }
+        }
+
+        function buildNumber() {
+            const input = document.getElementById('desiredDivisors').value;
+            if (!input) return;
+            
+            try {
+                const divisors = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n)).sort((a,b) => a-b);
+                
+                if (divisors.length === 0) {
+                    document.getElementById('buildResult').innerHTML = 
+                        '<span style="color: red;">Por favor, ingresa divisores válidos separados por comas.</span>';
+                    return;
+                }
+
+                // Verificar si los divisores forman un conjunto válido
+                const maxDivisor = Math.max(...divisors);
+                const actualDivisors = getDivisors(maxDivisor);
+                
+                if (JSON.stringify(divisors) === JSON.stringify(actualDivisors)) {
+                    document.getElementById('buildResult').innerHTML = 
+                        `<span style="color: green;">✅ ¡Perfecto!</span><br>El número <strong>${maxDivisor}</strong> tiene exactamente esos divisores.`;
+                    updateScore(20);
+                } else {
+                    document.getElementById('buildResult').innerHTML = 
+                        `<span style="color: orange;">🤔 Los divisores ${divisors.join(', ')} no corresponden a un número único.</span><br>` +
+                        `El número ${maxDivisor} tiene los divisores: ${actualDivisors.join(', ')}`;
+                }
+            } catch (error) {
+                document.getElementById('buildResult').innerHTML = 
+                    '<span style="color: red;">Error: Verifica el formato de los divisores.</span>';
+            }
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generar grid inicial para múltiplos
+            const multiplesGrid = document.getElementById('multiplesGrid');
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = i;
+                multiplesGrid.appendChild(cell);
+            }
+
+            // Agregar efectos de sonido simulados
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Agregar atajos de teclado
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && gameActive) {
+                    checkGameAnswer();
+                }
+            });
+        });
+
+        // Animación de entrada para las secciones
+        function animateSection() {
+            const activeSection = document.querySelector('.section.active');
+            if (activeSection) {
+                activeSection.style.opacity = '0';
+                activeSection.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    activeSection.style.transition = 'all 0.5s ease';
+                    activeSection.style.opacity = '1';
+                    activeSection.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        }
+
+        // Función para compartir progreso (simulada)
+        function shareProgress() {
+            const message = `¡He conseguido ${totalScore} puntos en la Aventura Matemática de Múltiplos y Divisores! 🎯✨`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi progreso en Matemáticas',
+                    text: message,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores sin soporte de Web Share API
+                navigator.clipboard.writeText(message).then(() => {
+                    showCelebration('¡Progreso copiado al portapapeles!');
+                });
+            }
+        }
+
+        // Consejos aleatorios
+        const tips = [
+            "💡 Los múltiplos de 9 siempre tienen la suma de sus dígitos igual a un múltiplo de 9.",
+            "🔍 Todo número par siempre es múltiplo de 2.",
+            "🎯 El número 1 es divisor de todos los números.",
+            "🌟 Los números primos solo tienen dos divisores: 1 y ellos mismos.",
+            "🎪 El MCM de dos números multiplicado por su MCD siempre es igual al producto de los dos números.",
+            "🎨 Los patrones de múltiplos se pueden usar para crear arte matemático.",
+            "🎵 La música usa múltiplos y divisores para crear ritmos y compases."
+        ];
+
+        function showRandomTip() {
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            showCelebration(tip);
+        }
+
+        // Mostrar tip aleatorio cada cierto tiempo
+        setInterval(showRandomTip, 120000); // Cada 2 minutos
+
+        // Función para resetear todo el progreso
+        function resetProgress() {
+            if (confirm('¿Estás seguro de que quieres reiniciar tu progreso?')) {
+                totalScore = 0;
+                streak = 0;
+                document.getElementById('totalScore').textContent = '0';
+                document.getElementById('streak').textContent = '0';
+                showCelebration('¡Progreso reiniciado! ¡A empezar de nuevo! 🚀');
+            }
+        }
+    </script>
+</body>
+</html>
+                `
