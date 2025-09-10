@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 MCM y MCD - Aventura Matemática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .score-display {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 35px;
+            margin: 25px 0;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            display: none;
+            animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.95);
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0px);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #333;
+            min-height: 60px;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-box.success {
+            border-left: 5px solid #27ae60;
+            background: linear-gradient(135deg, #d5f4e6 0%, #feffff 100%);
+        }
+
+        .result-box.error {
+            border-left: 5px solid #e74c3c;
+            background: linear-gradient(135deg, #fadbd8 0%, #feffff 100%);
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 8px;
+            margin: 25px 0;
+            max-width: 700px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+
+        .grid-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .grid-cell:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .grid-cell.mcm {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            border-color: #ff6b6b;
+            animation: pulse 2s ease-in-out infinite;
+            transform: scale(1.1);
+        }
+
+        .grid-cell.mcd {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            border-color: #4ecdc4;
+            animation: bounce 1s ease-in-out infinite;
+            transform: scale(1.1);
+        }
+
+        .grid-cell.both {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            border-color: #f39c12;
+            animation: glow 1.5s ease-in-out infinite;
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1.1); }
+            50% { transform: translateY(-8px) scale(1.1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
+                transform: scale(1.2);
+            }
+            50% { 
+                box-shadow: 0 0 25px rgba(243, 156, 18, 1);
+                transform: scale(1.3);
+            }
+        }
+
+        .game-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #333;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .celebration.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .celebration-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            z-index: 999;
+        }
+
+        .algorithm-steps {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .step {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(10px);
+        }
+
+        .real-world-example {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: #2c3e50;
+            box-shadow: 0 8px 25px rgba(255, 154, 158, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .nav-tabs { gap: 8px; }
+            .tab-btn { padding: 10px 18px; font-size: 14px; }
+            .container { padding: 15px; }
+            .section { padding: 20px; margin: 15px 0; }
+            .visual-grid { grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); }
+            .grid-cell { width: 40px; height: 40px; }
+            .input-group { flex-direction: column; align-items: stretch; }
+            .input-group > * { margin: 5px 0; }
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100vh) rotate(360deg); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="header">
+        <h1>🚀 MCM y MCD - Aventura Espacial</h1>
+        <p class="subtitle">¡Conviértete en un explorador matemático del espacio!</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🌟 Misión</button>
+            <button class="tab-btn" onclick="showSection('story')">📖 Historia</button>
+            <button class="tab-btn" onclick="showSection('mcm')">🚀 MCM</button>
+            <button class="tab-btn" onclick="showSection('mcd')">⚡ MCD</button>
+            <button class="tab-btn" onclick="showSection('together')">🌌 Unidos</button>
+            <button class="tab-btn" onclick="showSection('games')">🎮 Desafíos</button>
+            <button class="tab-btn" onclick="showSection('realworld')">🌍 Mundo Real</button>
+        </div>
+
+        <div class="score-display">
+            🏆 Puntos Galácticos: <span id="totalScore">0</span> | 🔥 Racha: <span id="streak">0</span> | 🌟 Nivel: <span id="level">Cadete</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Introducción -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 25px;">🌟 Tu Misión Matemática</h2>
+            
+            <div class="story-card">
+                <h3>🚀 ¡Bienvenido, Explorador Espacial!</h3>
+                <p style="font-size: 18px; line-height: 1.8;">
+                    El año es 2157. La Tierra ha desarrollado tecnología para explorar galaxias distantes, pero hay un problema: 
+                    nuestras naves espaciales necesitan sincronizar sus sistemas usando algo llamado MCM (Mínimo Común Múltiplo) 
+                    y MCD (Máximo Común Divisor). ¡Sin estos cálculos, las misiones fallarán!
+                </p>
+                <br>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Como el nuevo cadete de la Academia Espacial, tu misión es dominar estos conceptos para salvar las misiones 
+                    y convertirte en el mejor piloto matemático del universo. ¿Estás listo para la aventura?
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎯 Objetivos de tu Misión:</h3>
+                <div style="font-size: 16px; line-height: 1.8;">
+                    <p>✨ Entender qué son el MCM y MCD a través de historias espaciales</p>
+                    <p>🔧 Aprender algoritmos para calcularlos como un verdadero ingeniero</p>
+                    <p>🎮 Practicar con simulaciones interactivas de misiones espaciales</p>
+                    <p>🌍 Descubrir cómo se usan en situaciones reales</p>
+                    <p>🏆 Completar desafíos épicos y ganar puntos galácticos</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('story')" style="font-size: 20px; padding: 18px 36px;">
+                    🚀 ¡Iniciar Aventura!
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Historia -->
+        <div class="section" id="story">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">📖 La Historia de los Números Perdidos</h2>
+            
+            <div class="story-card">
+                <h3>🌌 El Planeta de los Ciclos</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    En la galaxia de Numeralia, existe un planeta misterioso donde dos especies alienígenas han vivido en armonía durante milenios. 
+                    Los <strong>Múltiplos</strong> y los <strong>Divisores</strong> tienen rituales muy específicos:
+                </p>
+                <br>
+                <p>🔴 Los <strong>Múltiplos</strong> celebran cada 6 días terrestres</p>
+                <p>🔵 Los <strong>Divisores</strong> celebran cada 8 días terrestres</p>
+                <br>
+                <p style="font-size: 16px;">
+                    Un día, ambas especies decidieron celebrar juntos, pero necesitaban saber: <strong>¿Cada cuántos días coincidirían sus celebraciones?</strong> 
+                    Este problema los llevó a descubrir el MCM (Mínimo Común Múltiplo).
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🔍 Simulador de Celebraciones</h3>
+                <p>Ayuda a las especies alienígenas a encontrar cuándo celebrarán juntos:</p>
+                
+                <div class="input-group">
+                    <label>Múltiplos celebran cada:</label>
+                    <input type="number" id="celebration1" min="1" max="20" value="6">
+                    <label>días</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Divisores celebran cada:</label>
+                    <input type="number" id="celebration2" min="1" max="20" value="8">
+                    <label>días</label>
+                </div>
+                
+                <button class="btn" onclick="simulateCelebrations()">🎉 Calcular Celebración Conjunta</button>
+                
+                <div id="celebrationResult" class="result-box"></div>
+                <div id="celebrationGrid" class="visual-grid"></div>
+            </div>
+
+            <div class="story-card">
+                <h3>⚡ El Generador de Energía Universal</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Para alimentar sus ciudades, ambas especies usan cristales de energía que vienen en grupos. 
+                    Los cristales de los Múltiplos vienen en packs de 12, y los de los Divisores en packs de 18. 
+                    Necesitan encontrar el <strong>tamaño más grande de cristal</strong> que pueda dividir ambos packs igualmente. 
+                    ¡Esto los llevó a descubrir el MCD (Máximo Común Divisor)!
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('mcm')">
+                    🚀 Explorar el MCM
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección MCM -->
+        <div class="section" id="mcm">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🚀 Mínimo Común Múltiplo (MCM)</h2>
+            
+            <div class="story-card">
+                <h3>🎯 ¿Qué es el MCM?</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    El MCM es como un <strong>punto de encuentro en el espacio-tiempo</strong>. Imagina que tienes dos naves espaciales 
+                    que orbitan a velocidades diferentes. El MCM te dice cuándo y dónde se encontrarán nuevamente.
+                </p>
+                <br>
+                <p style="font-size: 16px;">
+                    Es el <strong>número más pequeño</strong> que es múltiplo de dos o más números al mismo tiempo.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🛸 Calculadora de Orbitas Espaciales</h3>
+                <p>Dos naves completan sus órbitas en diferentes tiempos. ¿Cuándo se encontrarán?</p>
+                
+                <div class="input-group">
+                    <label>Nave A completa órbita cada:</label>
+                    <input type="number" id="mcmNum1" min="1" max="50" value="6">
+                    <label>días</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Nave B completa órbita cada:</label>
+                    <input type="number" id="mcmNum2" min="1" max="50" value="8">
+                    <label>días</label>
+                </div>
+                
+                <button class="btn" onclick="calculateMCM()">🚀 Calcular Encuentro</button>
+                
+                <div id="mcmResult" class="result-box"></div>
+                <div id="mcmSteps" class="algorithm-steps"></div>
+                <div id="mcmVisual" class="visual-grid"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎮 Juego: Sincronización de Naves</h3>
+                <p>¡Practica encontrando el MCM de diferentes pares de números!</p>
+                
+                <div id="mcmGame" class="quiz-card">
+                    <h4 id="mcmQuestion">Presiona "Nueva Misión" para comenzar</h4>
+                    <div class="input-group" style="justify-content: center;">
+                        <input type="number" id="mcmAnswer" placeholder="Tu respuesta">
+                        <button class="btn" onclick="checkMCMAnswer()">🎯 Enviar</button>
+                        <button class="btn" onclick="newMCMQuestion()">🚀 Nueva Misión</button>
+                    </div>
+                    <div id="mcmGameResult" style="margin-top: 15px; font-weight: bold;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección MCD -->
+        <div class="section" id="mcd">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">⚡ Máximo Común Divisor (MCD)</h2>
+            
+            <div class="story-card">
+                <h3>🔋 ¿Qué es el MCD?</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    El MCD es como encontrar la <strong>pieza más grande</strong> que encaja perfectamente en dos sistemas diferentes. 
+                    Imagina que tienes dos tipos de paneles solares de diferentes tamaños, y quieres encontrar el módulo de energía 
+                    más grande que pueda alimentar ambos sistemas por igual.
+                </p>
+                <br>
+                <p style="font-size: 16px;">
+                    Es el <strong>número más grande</strong> que divide exactamente a dos o más números.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🔧 Laboratorio de Componentes Espaciales</h3>
+                <p>Encuentra el componente más grande que puede usarse en ambos sistemas:</p>
+                
+                <div class="input-group">
+                    <label>Sistema A tiene:</label>
+                    <input type="number" id="mcdNum1" min="1" max="100" value="24">
+                    <label>componentes</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Sistema B tiene:</label>
+                    <input type="number" id="mcdNum2" min="1" max="100" value="36">
+                    <label>componentes</label>
+                </div>
+                
+                <button class="btn" onclick="calculateMCD()">⚡ Analizar Sistemas</button>
+                
+                <div id="mcdResult" class="result-box"></div>
+                <div id="mcdSteps" class="algorithm-steps"></div>
+                <div id="mcdVisual" class="visual-grid"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎮 Desafío: Optimización de Recursos</h3>
+                <p>¡Encuentra el MCD para optimizar los recursos de la estación espacial!</p>
+                
+                <div id="mcdGame" class="quiz-card">
+                    <h4 id="mcdQuestion">Presiona "Nueva Optimización" para comenzar</h4>
+                    <div class="input-group" style="justify-content: center;">
+                        <input type="number" id="mcdAnswer" placeholder="Tu respuesta">
+                        <button class="btn" onclick="checkMCDAnswer()">⚡ Optimizar</button>
+                        <button class="btn" onclick="newMCDQuestion()">🔧 Nueva Optimización</button>
+                    </div>
+                    <div id="mcdGameResult" style="margin-top: 15px; font-weight: bold;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Unidos -->
+        <div class="section" id="together">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🌌 MCM y MCD Trabajando Juntos</h2>
+            
+            <div class="story-card">
+                <h3>🤝 La Gran Revelación</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Los científicos de la Tierra descubrieron algo asombroso: existe una relación mágica entre el MCM y MCD. 
+                    Para cualquier par de números, si los multiplicas y luego divides por su MCD, ¡obtienes su MCM!
+                </p>
+                <br>
+                <p style="font-size: 18px; font-weight: bold; color: #e74c3c;">
+                    MCM(a,b) × MCD(a,b) = a × b
+                </p>
+                <br>
+                <p style="font-size: 16px;">
+                    Esta fórmula es la clave para sincronizar todas las tecnologías del universo.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🧪 Laboratorio de Verificación Cósmica</h3>
+                <p>Comprueba la fórmula mágica con cualquier par de números:</p>
+                
+                <div class="input-group">
+                    <label>Primer número:</label>
+                    <input type="number" id="verifyNum1" min="1" max="100" value="12">
+                </div>
+                
+                <div class="input-group">
+                    <label>Segundo número:</label>
+                    <input type="number" id="verifyNum2" min="1" max="100" value="18">
+                </div>
+                
+                <button class="btn" onclick="verifyFormula()">🧪 Verificar Fórmula Mágica</button>
+                
+                <div id="verifyResult" class="result-box"></div>
+                <div id="verifySteps" class="algorithm-steps"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎯 Calculadora Suprema</h3>
+                <p>Calcula MCM y MCD simultáneamente para múltiples números:</p>
+                
+                <div class="input-group">
+                    <label>Ingresa números separados por comas:</label>
+                    <input type="text" id="multipleNumbers" placeholder="12, 18, 24" style="min-width: 200px;">
+                </div>
+                
+                <button class="btn" onclick="calculateMultiple()">🌟 Calcular Todo</button>
+                
+                <div id="multipleResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Juegos -->
+        <div class="section" id="games">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🎮 Desafíos Galácticos</h2>
+            
+            <div class="game-area">
+                <h3>⚡ Misión Relámpago</h3>
+                <p>¡Resuelve problemas de MCM y MCD antes de que se agote el combustible!</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="gameProgress"></div>
+                </div>
+
+                <div id="gameStats" style="display: flex; gap: 30px; justify-content: center; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px;">⏱️</div>
+                        <div>Tiempo: <span id="gameTime">60</span>s</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px;">🎯</div>
+                        <div>Correctas: <span id="gameScore">0</span></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px;">🔥</div>
+                        <div>Combustible: <span id="gameFuel">100</span>%</div>
+                    </div>
+                </div>
+
+                <div id="mainGameQuestion" class="quiz-card">
+                    <h4 id="mainQuestionText">¡Presiona "Iniciar Misión" para comenzar!</h4>
+                    <div class="input-group" style="justify-content: center;">
+                        <input type="number" id="mainGameAnswer" placeholder="Tu respuesta">
+                        <button class="btn" onclick="checkMainAnswer()">🚀 Responder</button>
+                        <button class="btn" onclick="startMainGame()">⚡ Iniciar Misión</button>
+                    </div>
+                    <div id="mainGameResult" style="margin-top: 15px; font-weight: bold;"></div>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🏆 Desafíos Épicos</h3>
+                
+                <div class="quiz-card">
+                    <p><strong>Desafío 1:</strong> Una estación espacial recibe suministros cada 15 días y combustible cada 20 días. ¿Cada cuántos días recibe ambos al mismo tiempo?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge1" placeholder="Días">
+                        <button class="btn" onclick="checkChallenge(1)">🎯 Verificar</button>
+                    </div>
+                    <div id="result1" class="result-box" style="margin-top: 15px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 2:</strong> Dos grupos de astronautas (uno de 24 y otro de 36) deben dividirse en equipos del mismo tamaño, lo más grande posible. ¿Cuántos astronautas tendrá cada equipo?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge2" placeholder="Astronautas por equipo">
+                        <button class="btn" onclick="checkChallenge(2)">🎯 Verificar</button>
+                    </div>
+                    <div id="result2" class="result-box" style="margin-top: 15px;"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <p><strong>Desafío 3:</strong> Si MCM(a,b) = 60 y MCD(a,b) = 4, y uno de los números es 12, ¿cuál es el otro número?</p>
+                    <div class="input-group">
+                        <input type="number" id="challenge3" placeholder="El otro número">
+                        <button class="btn" onclick="checkChallenge(3)">🎯 Verificar</button>
+                    </div>
+                    <div id="result3" class="result-box" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Mundo Real -->
+        <div class="section" id="realworld">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🌍 MCM y MCD en el Mundo Real</h2>
+            
+            <div class="real-world-example">
+                <h3>🎵 Música y Ritmo</h3>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Los músicos usan MCM para sincronizar diferentes instrumentos. Si un tambor toca cada 3 tiempos 
+                    y una guitarra cada 4 tiempos, tocarán juntos cada 12 tiempos (MCM de 3 y 4).
+                </p>
+                
+                <div class="input-group">
+                    <label>Instrumento 1 toca cada:</label>
+                    <input type="number" id="musicBeat1" min="1" max="12" value="3">
+                    <label>tiempos</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Instrumento 2 toca cada:</label>
+                    <input type="number" id="musicBeat2" min="1" max="12" value="4">
+                    <label>tiempos</label>
+                </div>
+                
+                <button class="btn" onclick="calculateMusicSync()">🎵 Sincronizar</button>
+                <div id="musicResult" class="result-box"></div>
+            </div>
+
+            <div class="real-world-example">
+                <h3>🚌 Transporte Público</h3>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Los autobuses de diferentes líneas usan MCM para planificar sus horarios. Si la línea A pasa cada 15 minutos 
+                    y la línea B cada 20 minutos, coincidirán en la parada cada 60 minutos.
+                </p>
+                
+                <div class="input-group">
+                    <label>Línea A cada:</label>
+                    <input type="number" id="busLine1" min="5" max="30" value="15">
+                    <label>minutos</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Línea B cada:</label>
+                    <input type="number" id="busLine2" min="5" max="30" value="20">
+                    <label>minutos</label>
+                </div>
+                
+                <button class="btn" onclick="calculateBusSync()">🚌 Calcular</button>
+                <div id="busResult" class="result-box"></div>
+            </div>
+
+            <div class="real-world-example">
+                <h3>🎂 Organización de Fiestas</h3>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Para organizar mesas en una fiesta, usamos MCD. Si tienes 48 invitados y 36 sillas, 
+                    el MCD te dice el tamaño máximo de grupo que puedes hacer con la misma cantidad de personas y sillas.
+                </p>
+                
+                <div class="input-group">
+                    <label>Invitados:</label>
+                    <input type="number" id="guests" min="10" max="100" value="48">
+                </div>
+                
+                <div class="input-group">
+                    <label>Sillas:</label>
+                    <input type="number" id="chairs" min="10" max="100" value="36">
+                </div>
+                
+                <button class="btn" onclick="calculatePartyArrangement()">🎂 Organizar</button>
+                <div id="partyResult" class="result-box"></div>
+            </div>
+
+            <div class="real-world-example">
+                <h3>💻 Programación y Videojuegos</h3>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Los programadores usan MCM para sincronizar eventos. Si un power-up aparece cada 30 segundos 
+                    y un enemigo cada 45 segundos, ¿cada cuánto tiempo aparecerán juntos?
+                </p>
+                
+                <div class="input-group">
+                    <label>Power-up cada:</label>
+                    <input type="number" id="powerup" min="10" max="60" value="30">
+                    <label>segundos</label>
+                </div>
+                
+                <div class="input-group">
+                    <label>Enemigo cada:</label>
+                    <input type="number" id="enemy" min="10" max="60" value="45">
+                    <label>segundos</label>
+                </div>
+                
+                <button class="btn" onclick="calculateGameSync()">💻 Sincronizar</button>
+                <div id="gameDevResult" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration-backdrop" id="celebrationBackdrop"></div>
+    <div class="celebration" id="celebration">
+        <h2>🎉 ¡Misión Completada!</h2>
+        <p id="celebrationMessage"></p>
+        <button class="btn" onclick="closeCelebration()">🚀 Continuar</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let streak = 0;
+        let level = "Cadete";
+        let gameActive = false;
+        let gameTimer;
+        let gameTime = 60;
+        let gameFuel = 100;
+        let currentAnswer = 0;
+
+        // Crear partículas flotantes
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionName).classList.add('active');
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateScore(points) {
+            totalScore += points;
+            streak += 1;
+            
+            // Actualizar nivel
+            if (totalScore >= 500) level = "Comandante Supremo";
+            else if (totalScore >= 300) level = "Capitán";
+            else if (totalScore >= 150) level = "Teniente";
+            else if (totalScore >= 50) level = "Sargento";
+            
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('level').textContent = level;
+        }
+
+        function resetStreak() {
+            streak = 0;
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function showCelebration(message) {
+            document.getElementById('celebrationMessage').textContent = message;
+            document.getElementById('celebrationBackdrop').style.display = 'block';
+            document.getElementById('celebration').classList.add('show');
+            
+            setTimeout(() => {
+                closeCelebration();
+            }, 3000);
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebrationBackdrop').style.display = 'none';
+            document.getElementById('celebration').classList.remove('show');
+        }
+
+        // Algoritmo para calcular MCD usando Euclides
+        function gcd(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // Función para calcular MCM
+        function lcm(a, b) {
+            return (a * b) / gcd(a, b);
+        }
+
+        function simulateCelebrations() {
+            const days1 = parseInt(document.getElementById('celebration1').value);
+            const days2 = parseInt(document.getElementById('celebration2').value);
+            
+            if (!days1 || !days2) return;
+
+            const mcm = lcm(days1, days2);
+            
+            document.getElementById('celebrationResult').innerHTML = 
+                `<div class="success">
+                    <h4>🎉 ¡Resultado de la Simulación!</h4>
+                    <p>Los Múltiplos y Divisores celebrarán juntos cada <strong>${mcm}</strong> días.</p>
+                    <p>Las primeras 5 celebraciones conjuntas serán en los días: 
+                    <strong>${mcm}, ${mcm*2}, ${mcm*3}, ${mcm*4}, ${mcm*5}</strong></p>
+                </div>`;
+
+            // Visualización
+            const grid = document.getElementById('celebrationGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= Math.min(100, mcm * 3); i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = i;
+                
+                const isMultiple1 = i % days1 === 0;
+                const isMultiple2 = i % days2 === 0;
+                
+                if (isMultiple1 && isMultiple2) {
+                    cell.classList.add('both');
+                } else if (isMultiple1) {
+                    cell.classList.add('mcm');
+                } else if (isMultiple2) {
+                    cell.classList.add('mcd');
+                }
+                
+                grid.appendChild(cell);
+            }
+
+            updateScore(20);
+        }
+
+        function calculateMCM() {
+            const num1 = parseInt(document.getElementById('mcmNum1').value);
+            const num2 = parseInt(document.getElementById('mcmNum2').value);
+            
+            if (!num1 || !num2) return;
+
+            const mcdValue = gcd(num1, num2);
+            const mcmValue = lcm(num1, num2);
+
+            document.getElementById('mcmResult').innerHTML = 
+                `<div class="success">
+                    <h4>🚀 Resultado del Análisis Orbital</h4>
+                    <p>Las naves se encontrarán cada <strong>${mcmValue}</strong> días.</p>
+                    <p>Esto significa que después de ${mcmValue} días, ambas naves estarán en el mismo punto del espacio.</p>
+                </div>`;
+
+            // Mostrar pasos del algoritmo
+            document.getElementById('mcmSteps').innerHTML = 
+                `<h4>📋 Pasos del Cálculo:</h4>
+                <div class="step">1. Encontrar MCD(${num1}, ${num2}) = ${mcdValue}</div>
+                <div class="step">2. Aplicar fórmula: MCM = (a × b) ÷ MCD</div>
+                <div class="step">3. MCM = (${num1} × ${num2}) ÷ ${mcdValue} = ${mcmValue}</div>`;
+
+            // Visualización
+            const grid = document.getElementById('mcmVisual');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= Math.min(100, mcmValue * 2); i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = i;
+                
+                if (i % num1 === 0 && i % num2 === 0) {
+                    cell.classList.add('both');
+                } else if (i % num1 === 0) {
+                    cell.classList.add('mcm');
+                } else if (i % num2 === 0) {
+                    cell.classList.add('mcd');
+                }
+                
+                grid.appendChild(cell);
+            }
+
+            updateScore(25);
+        }
+
+        function calculateMCD() {
+            const num1 = parseInt(document.getElementById('mcdNum1').value);
+            const num2 = parseInt(document.getElementById('mcdNum2').value);
+            
+            if (!num1 || !num2) return;
+
+            const mcdValue = gcd(num1, num2);
+            const groups1 = num1 / mcdValue;
+            const groups2 = num2 / mcdValue;
+
+            document.getElementById('mcdResult').innerHTML = 
+                `<div class="success">
+                    <h4>⚡ Análisis de Componentes Completado</h4>
+                    <p>El componente más grande que puede usar ambos sistemas tiene <strong>${mcdValue}</strong> unidades.</p>
+                    <p>Sistema A: ${groups1} grupos de ${mcdValue} componentes</p>
+                    <p>Sistema B: ${groups2} grupos de ${mcdValue} componentes</p>
+                </div>`;
+
+            // Mostrar algoritmo de Euclides
+            document.getElementById('mcdSteps').innerHTML = 
+                `<h4>🔧 Algoritmo de Euclides:</h4>
+                ${euclideanSteps(num1, num2)}`;
+
+            updateScore(25);
+        }
+
+        function euclideanSteps(a, b) {
+            let steps = '';
+            let step = 1;
+            
+            while (b !== 0) {
+                const quotient = Math.floor(a / b);
+                const remainder = a % b;
+                steps += `<div class="step">Paso ${step}: ${a} = ${b} × ${quotient} + ${remainder}</div>`;
+                a = b;
+                b = remainder;
+                step++;
+            }
+            
+            steps += `<div class="step">Resultado: MCD = ${a}</div>`;
+            return steps;
+        }
+
+        function verifyFormula() {
+            const num1 = parseInt(document.getElementById('verifyNum1').value);
+            const num2 = parseInt(document.getElementById('verifyNum2').value);
+            
+            if (!num1 || !num2) return;
+
+            const mcdValue = gcd(num1, num2);
+            const mcmValue = lcm(num1, num2);
+            const product = num1 * num2;
+            const formulaResult = mcmValue * mcdValue;
+
+            const isCorrect = product === formulaResult;
+
+            document.getElementById('verifyResult').innerHTML = 
+                `<div class="${isCorrect ? 'success' : 'error'}">
+                    <h4>🧪 Verificación de la Fórmula Mágica</h4>
+                    <p>MCM(${num1}, ${num2}) = ${mcmValue}</p>
+                    <p>MCD(${num1}, ${num2}) = ${mcdValue}</p>
+                    <p>MCM × MCD = ${mcmValue} × ${mcdValue} = ${formulaResult}</p>
+                    <p>${num1} × ${num2} = ${product}</p>
+                    <p style="font-size: 18px; font-weight: bold; color: ${isCorrect ? 'green' : 'red'};">
+                        ${isCorrect ? '✅ ¡La fórmula funciona!' : '❌ Algo salió mal'}
+                    </p>
+                </div>`;
+
+            document.getElementById('verifySteps').innerHTML = 
+                `<h4>📊 Explicación:</h4>
+                <div class="step">Esta relación siempre se cumple porque MCM y MCD están relacionados matemáticamente.</div>
+                <div class="step">Al multiplicar MCM × MCD obtienes exactamente el producto de los dos números originales.</div>
+                <div class="step">¡Esta es una de las propiedades más hermosas de los números!</div>`;
+
+            if (isCorrect) updateScore(30);
+        }
+
+        // Juego de MCM
+        let mcmGameAnswer = 0;
+
+        function newMCMQuestion() {
+            const num1 = Math.floor(Math.random() * 15) + 2;
+            const num2 = Math.floor(Math.random() * 15) + 2;
+            mcmGameAnswer = lcm(num1, num2);
+            
+            document.getElementById('mcmQuestion').textContent = 
+                `🚀 Misión: Sincroniza las naves que orbitan cada ${num1} y ${num2} días. ¿Cuándo se encontrarán?`;
+            document.getElementById('mcmAnswer').value = '';
+            document.getElementById('mcmGameResult').textContent = '';
+        }
+
+        function checkMCMAnswer() {
+            const userAnswer = parseInt(document.getElementById('mcmAnswer').value);
+            const resultDiv = document.getElementById('mcmGameResult');
+            
+            if (userAnswer === mcmGameAnswer) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Correcto! +15 puntos galácticos</span>';
+                updateScore(15);
+                showCelebration('¡Naves sincronizadas correctamente!');
+                setTimeout(newMCMQuestion, 1500);
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. La respuesta era ${mcmGameAnswer}</span>`;
+                resetStreak();
+                setTimeout(newMCMQuestion, 2000);
+            }
+        }
+
+        // Juego de MCD
+        let mcdGameAnswer = 0;
+
+        function newMCDQuestion() {
+            const num1 = Math.floor(Math.random() * 40) + 20;
+            const num2 = Math.floor(Math.random() * 40) + 20;
+            mcdGameAnswer = gcd(num1, num2);
+            
+            document.getElementById('mcdQuestion').textContent = 
+                `⚡ Optimización: Encuentra el componente más grande que divide ${num1} y ${num2} unidades.`;
+            document.getElementById('mcdAnswer').value = '';
+            document.getElementById('mcdGameResult').textContent = '';
+        }
+
+        function checkMCDAnswer() {
+            const userAnswer = parseInt(document.getElementById('mcdAnswer').value);
+            const resultDiv = document.getElementById('mcdGameResult');
+            
+            if (userAnswer === mcdGameAnswer) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Optimización exitosa! +15 puntos</span>';
+                updateScore(15);
+                showCelebration('¡Recursos optimizados perfectamente!');
+                setTimeout(newMCDQuestion, 1500);
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. El componente óptimo era ${mcdGameAnswer}</span>`;
+                resetStreak();
+                setTimeout(newMCDQuestion, 2000);
+            }
+        }
+
+        // Juego principal
+        function startMainGame() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            gameTime = 60;
+            gameFuel = 100;
+            document.getElementById('gameScore').textContent = '0';
+            
+            gameTimer = setInterval(() => {
+                gameTime--;
+                gameFuel -= 1.67; // Pierde combustible más rápido
+                
+                document.getElementById('gameTime').textContent = gameTime;
+                document.getElementById('gameFuel').textContent = Math.max(0, Math.round(gameFuel));
+                document.getElementById('gameProgress').style.width = ((60 - gameTime) / 60 * 100) + '%';
+                
+                if (gameTime <= 0 || gameFuel <= 0) {
+                    endMainGame();
+                }
+            }, 1000);
+
+            generateMainQuestion();
+        }
+
+        function generateMainQuestion() {
+            if (!gameActive) return;
+
+            const questionTypes = ['mcm', 'mcd', 'formula'];
+            const type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            const num1 = Math.floor(Math.random() * 20) + 5;
+            const num2 = Math.floor(Math.random() * 20) + 5;
+            
+            let question = '';
+            
+            switch(type) {
+                case 'mcm':
+                    question = `🚀 MCM de ${num1} y ${num2}:`;
+                    currentAnswer = lcm(num1, num2);
+                    break;
+                case 'mcd':
+                    question = `⚡ MCD de ${num1} y ${num2}:`;
+                    currentAnswer = gcd(num1, num2);
+                    break;
+                case 'formula':
+                    const mcmVal = lcm(num1, num2);
+                    const mcdVal = gcd(num1, num2);
+                    if (Math.random() > 0.5) {
+                        question = `🧪 Si MCM(${num1},${num2})=${mcmVal}, ¿cuál es su MCD?`;
+                        currentAnswer = mcdVal;
+                    } else {
+                        question = `🧪 Si MCD(${num1},${num2})=${mcdVal}, ¿cuál es su MCM?`;
+                        currentAnswer = mcmVal;
+                    }
+                    break;
+            }
+
+            document.getElementById('mainQuestionText').textContent = question;
+            document.getElementById('mainGameAnswer').value = '';
+            document.getElementById('mainGameResult').textContent = '';
+        }
+
+        function checkMainAnswer() {
+            if (!gameActive) return;
+
+            const userAnswer = parseInt(document.getElementById('mainGameAnswer').value);
+            const resultDiv = document.getElementById('mainGameResult');
+            
+            if (userAnswer === currentAnswer) {
+                resultDiv.innerHTML = '<span style="color: green;">✅ ¡Correcto! +20 puntos</span>';
+                updateScore(20);
+                gameFuel = Math.min(100, gameFuel + 10); // Recupera combustible
+                let currentScore = parseInt(document.getElementById('gameScore').textContent);
+                document.getElementById('gameScore').textContent = currentScore + 1;
+                
+                setTimeout(generateMainQuestion, 1000);
+            } else {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Incorrecto. Era ${currentAnswer}</span>`;
+                resetStreak();
+                gameFuel -= 15; // Pierde más combustible
+                
+                setTimeout(generateMainQuestion, 1500);
+            }
+        }
+
+        function endMainGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            const finalScore = parseInt(document.getElementById('gameScore').textContent);
+            let message = '';
+            
+            if (finalScore >= 20) {
+                message = '🏆 ¡Comandante Supremo! Salvaste la galaxia';
+            } else if (finalScore >= 15) {
+                message = '🎯 ¡Capitán Espacial! Misión exitosa';
+            } else if (finalScore >= 10) {
+                message = '👨‍🚀 ¡Buen trabajo, Astronauta!';
+            } else if (finalScore >= 5) {
+                message = '🚀 ¡Cadete prometedor!';
+            } else {
+                message = '💪 ¡Sigue entrenando en la academia!';
+            }
+            
+            showCelebration(message + ` Resolviste ${finalScore} problemas correctamente.`);
+            
+            document.getElementById('mainQuestionText').textContent = '¡Misión completada! Presiona "Iniciar Misión" para una nueva aventura.';
+            document.getElementById('gameProgress').style.width = '0%';
+            gameTime = 60;
+            gameFuel = 100;
+            document.getElementById('gameTime').textContent = gameTime;
+            document.getElementById('gameFuel').textContent = gameFuel;
+        }
+
+        function checkChallenge(challengeNumber) {
+            let userAnswer, correctAnswer, explanation;
+            
+            switch(challengeNumber) {
+                case 1:
+                    userAnswer = parseInt(document.getElementById('challenge1').value);
+                    correctAnswer = lcm(15, 20);
+                    explanation = `MCM(15, 20) = ${correctAnswer}. La estación recibe ambos suministros cada ${correctAnswer} días.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result1').innerHTML = 
+                            `<div class="success">✅ ¡Correcto!<br>${explanation}</div>`;
+                        updateScore(40);
+                        showCelebration('¡Resolviste el desafío de la estación espacial!');
+                    } else {
+                        document.getElementById('result1').innerHTML = 
+                            `<div class="error">❌ Incorrecto.<br>${explanation}</div>`;
+                    }
+                    break;
+                    
+                case 2:
+                    userAnswer = parseInt(document.getElementById('challenge2').value);
+                    correctAnswer = gcd(24, 36);
+                    explanation = `MCD(24, 36) = ${correctAnswer}. Cada equipo tendrá ${correctAnswer} astronautas.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result2').innerHTML = 
+                            `<div class="success">✅ ¡Correcto!<br>${explanation}<br>Se formarán ${24/correctAnswer + 36/correctAnswer} equipos en total.</div>`;
+                        updateScore(45);
+                        showCelebration('¡Experto en organización de equipos!');
+                    } else {
+                        document.getElementById('result2').innerHTML = 
+                            `<div class="error">❌ Incorrecto.<br>${explanation}</div>`;
+                    }
+                    break;
+                    
+                case 3:
+                    userAnswer = parseInt(document.getElementById('challenge3').value);
+                    // MCM(a,b) × MCD(a,b) = a × b
+                    // 60 × 4 = 12 × b
+                    // b = 240 ÷ 12 = 20
+                    correctAnswer = 20;
+                    explanation = `Usando la fórmula MCM × MCD = a × b: 60 × 4 = 12 × b, entonces b = 20.`;
+                    
+                    if (userAnswer === correctAnswer) {
+                        document.getElementById('result3').innerHTML = 
+                            `<div class="success">✅ ¡Increíble!<br>${explanation}<br>¡Dominaste la fórmula mágica!</div>`;
+                        updateScore(50);
+                        showCelebration('¡Maestro de la fórmula universal!');
+                    } else {
+                        document.getElementById('result3').innerHTML = 
+                            `<div class="error">❌ Incorrecto.<br>${explanation}</div>`;
+                    }
+                    break;
+            }
+        }
+
+        function calculateMusicSync() {
+            const beat1 = parseInt(document.getElementById('musicBeat1').value);
+            const beat2 = parseInt(document.getElementById('musicBeat2').value);
+            
+            if (!beat1 || !beat2) return;
+
+            const sync = lcm(beat1, beat2);
+            
+            document.getElementById('musicResult').innerHTML = 
+                `<div class="success">
+                    <h4>🎵 Sincronización Musical</h4>
+                    <p>Los instrumentos tocarán juntos cada <strong>${sync}</strong> tiempos.</p>
+                    <p>En una pieza de 60 segundos, coincidirán ${Math.floor(60/sync)} veces.</p>
+                </div>`;
+
+            updateScore(15);
+        }
+
+        function calculateBusSync() {
+            const line1 = parseInt(document.getElementById('busLine1').value);
+            const line2 = parseInt(document.getElementById('busLine2').value);
+            
+            if (!line1 || !line2) return;
+
+            const sync = lcm(line1, line2);
+            
+            document.getElementById('busResult').innerHTML = 
+                `<div class="success">
+                    <h4>🚌 Sincronización de Transporte</h4>
+                    <p>Ambos autobuses coincidirán en la parada cada <strong>${sync}</strong> minutos.</p>
+                    <p>En una mañana de 3 horas (180 min), coincidirán ${Math.floor(180/sync)} veces.</p>
+                </div>`;
+
+            updateScore(15);
+        }
+
+        function calculatePartyArrangement() {
+            const guests = parseInt(document.getElementById('guests').value);
+            const chairs = parseInt(document.getElementById('chairs').value);
+            
+            if (!guests || !chairs) return;
+
+            const maxGroup = gcd(guests, chairs);
+            const guestGroups = guests / maxGroup;
+            const chairGroups = chairs / maxGroup;
+            
+            document.getElementById('partyResult').innerHTML = 
+                `<div class="success">
+                    <h4>🎂 Organización de Fiesta</h4>
+                    <p>Puedes hacer grupos de máximo <strong>${maxGroup}</strong> personas.</p>
+                    <p>Tendrás ${guestGroups} grupos de invitados y ${chairGroups} grupos de sillas.</p>
+                    <p>${maxGroup === Math.min(guests, chairs) ? '¡Organización perfecta!' : 'Algunos quedarán sin pareja.'}</p>
+                </div>`;
+
+            updateScore(15);
+        }
+
+        function calculateGameSync() {
+            const powerup = parseInt(document.getElementById('powerup').value);
+            const enemy = parseInt(document.getElementById('enemy').value);
+            
+            if (!powerup || !enemy) return;
+
+            const sync = lcm(powerup, enemy);
+            
+            document.getElementById('gameDevResult').innerHTML = 
+                `<div class="success">
+                    <h4>💻 Sincronización de Juego</h4>
+                    <p>Power-up y enemigo aparecerán juntos cada <strong>${sync}</strong> segundos.</p>
+                    <p>En una partida de 10 minutos, esto ocurrirá ${Math.floor(600/sync)} veces.</p>
+                    <p>¡Momentos de máxima dificultad!</p>
+                </div>`;
+
+            updateScore(15);
+        }
+
+        function calculateMultiple() {
+            const input = document.getElementById('multipleNumbers').value;
+            if (!input) return;
+            
+            try {
+                const numbers = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n > 0);
+                
+                if (numbers.length < 2) {
+                    document.getElementById('multipleResult').innerHTML = 
+                        '<div class="error">Por favor, ingresa al menos 2 números válidos separados por comas.</div>';
+                    return;
+                }
+
+                let mcmResult = numbers[0];
+                let mcdResult = numbers[0];
+                
+                for (let i = 1; i < numbers.length; i++) {
+                    mcmResult = lcm(mcmResult, numbers[i]);
+                    mcdResult = gcd(mcdResult, numbers[i]);
+                }
+
+                document.getElementById('multipleResult').innerHTML = 
+                    `<div class="success">
+                        <h4>🌟 Análisis Completo de ${numbers.join(', ')}</h4>
+                        <p><strong>MCM:</strong> ${mcmResult}</p>
+                        <p><strong>MCD:</strong> ${mcdResult}</p>
+                        <p><strong>Interpretación:</strong></p>
+                        <p>• El MCM (${mcmResult}) es el menor número divisible por todos.</p>
+                        <p>• El MCD (${mcdResult}) es el mayor divisor común de todos.</p>
+                    </div>`;
+
+                updateScore(35);
+                showCelebration('¡Análisis múltiple completado!');
+            } catch (error) {
+                document.getElementById('multipleResult').innerHTML = 
+                    '<div class="error">Error: Verifica el formato de los números.</div>';
+            }
+        }
+
+        // Funciones de utilidad para eventos del DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Agregar efectos de sonido visual
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Agregar atajos de teclado
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    if (gameActive && document.getElementById('mainGameAnswer') === document.activeElement) {
+                        checkMainAnswer();
+                    } else if (document.getElementById('mcmAnswer') === document.activeElement) {
+                        checkMCMAnswer();
+                    } else if (document.getElementById('mcdAnswer') === document.activeElement) {
+                        checkMCDAnswer();
+                    }
+                }
+                
+                // Atajos para navegación
+                if (event.ctrlKey || event.metaKey) {
+                    switch(event.key) {
+                        case '1':
+                            event.preventDefault();
+                            showSection('intro');
+                            break;
+                        case '2':
+                            event.preventDefault();
+                            showSection('story');
+                            break;
+                        case '3':
+                            event.preventDefault();
+                            showSection('mcm');
+                            break;
+                        case '4':
+                            event.preventDefault();
+                            showSection('mcd');
+                            break;
+                    }
+                }
+            });
+
+            // Validación en tiempo real
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value < 0) this.value = 0;
+                    if (this.value > 1000) this.value = 1000;
+                });
+            });
+        });
+
+        // Función para generar consejos aleatorios
+        const tips = [
+            "💡 El MCM de dos números primos siempre es su producto.",
+            "⭐ El MCD de dos números consecutivos siempre es 1.",
+            "🎯 Para números grandes, usa la fórmula: MCM = (a × b) ÷ MCD.",
+            "🌟 El algoritmo de Euclides es el método más eficiente para calcular MCD.",
+            "🚀 MCM se usa en astronomía para calcular alineaciones planetarias.",
+            "🎵 Los músicos usan MCM para crear compases complejos.",
+            "💻 Los programadores usan MCD para simplificar fracciones en código.",
+            "🌍 El MCM ayuda a sincronizar semáforos en las ciudades."
+        ];
+
+        function showRandomTip() {
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            showCelebration(tip);
+        }
+
+        // Mostrar consejos periódicamente
+        setInterval(showRandomTip, 90000);
+
+        // Función para resetear progreso
+        function resetProgress() {
+            if (confirm('¿Estás seguro de que quieres reiniciar tu progreso de cadete espacial?')) {
+                totalScore = 0;
+                streak = 0;
+                level = "Cadete";
+                document.getElementById('totalScore').textContent = '0';
+                document.getElementById('streak').textContent = '0';
+                document.getElementById('level').textContent = 'Cadete';
+                showCelebration('¡Progreso reiniciado! ¡Nueva misión espacial iniciada! 🚀');
+            }
+        }
+
+        // Función para compartir progreso (simulada)
+        function shareProgress() {
+            const message = `¡Alcancé ${totalScore} puntos galácticos como ${level} en la Academia Espacial MCM y MCD! 🚀✨ #MatemáticasEspaciales`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi aventura matemática espacial',
+                    text: message,
+                    url: window.location.href
+                });
+            } else {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        showCelebration('¡Progreso copiado para compartir!');
+                    });
+                }
+            }
+        }
+
+        // Agregar botones de utilidad en el header (opcional)
+        function addUtilityButtons() {
+            const header = document.querySelector('.header');
+            const utilityDiv = document.createElement('div');
+            utilityDiv.style.cssText = 'margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;';
+            
+            const shareBtn = document.createElement('button');
+            shareBtn.className = 'btn';
+            shareBtn.style.cssText = 'font-size: 12px; padding: 8px 16px;';
+            shareBtn.textContent = '🔗 Compartir';
+            shareBtn.onclick = shareProgress;
+            
+            const resetBtn = document.createElement('button');
+            resetBtn.className = 'btn';
+            resetBtn.style.cssText = 'font-size: 12px; padding: 8px 16px; background: linear-gradient(45deg, #e74c3c, #c0392b);';
+            resetBtn.textContent = '🔄 Reiniciar';
+            resetBtn.onclick = resetProgress;
+            
+            const tipBtn = document.createElement('button');
+            tipBtn.className = 'btn';
+            tipBtn.style.cssText = 'font-size: 12px; padding: 8px 16px; background: linear-gradient(45deg, #f39c12, #e67e22);';
+            tipBtn.textContent = '💡 Consejo';
+            tipBtn.onclick = showRandomTip;
+            
+            utilityDiv.appendChild(shareBtn);
+            utilityDiv.appendChild(tipBtn);
+            utilityDiv.appendChild(resetBtn);
+            header.appendChild(utilityDiv);
+        }
+
+        // Llamar después de que se cargue todo
+        setTimeout(addUtilityButtons, 1000);
+
+        // Efecto de parallax suave para las partículas
+        document.addEventListener('mousemove', function(e) {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            particles.forEach((particle, index) => {
+                const speed = (index % 3 + 1) * 0.5;
+                const x = mouseX * speed;
+                const y = mouseY * speed;
+                particle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Función para agregar más partículas dinámicamente
+        function addDynamicParticle() {
+            const container = document.getElementById('particles');
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = '0s';
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            container.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 8000);
+        }
+
+        // Agregar partículas dinámicas ocasionalmente
+        setInterval(addDynamicParticle, 3000);
+
+        // Animación de entrada para las secciones
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar todas las tarjetas de actividad
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.activity-card, .story-card, .real-world-example');
+            cards.forEach(card => observer.observe(card));
+        });
+    </script>
+</body>
+</html>

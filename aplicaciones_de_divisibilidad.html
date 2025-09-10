@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 Aplicaciones de Divisibilidad - Aventura Matemática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .history-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+            min-width: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #333;
+            min-height: 50px;
+            font-size: 16px;
+        }
+
+        .rule-card {
+            background: white;
+            border-left: 5px solid #4ecdc4;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #4ecdc4;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 30px 0;
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 30px;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 55%;
+            padding-left: 30px;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timeline-date {
+            background: #4ecdc4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .game-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .practical-example {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .nav-tabs { gap: 5px; }
+            .tab-btn { padding: 8px 16px; font-size: 14px; }
+            .container { padding: 10px; }
+            .section { padding: 20px; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: calc(100% - 40px); left: 0 !important; padding-left: 40px !important; padding-right: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧮 Aplicaciones de Divisibilidad</h1>
+        <p style="font-size: 18px; color: #666;">Descubre cómo la divisibilidad gobierna nuestro mundo</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🏛️ Historia</button>
+            <button class="tab-btn" onclick="showSection('rules')">📏 Reglas</button>
+            <button class="tab-btn" onclick="showSection('applications')">🌍 Aplicaciones</button>
+            <button class="tab-btn" onclick="showSection('practice')">💻 Práctica</button>
+            <button class="tab-btn" onclick="showSection('challenges')">🎯 Desafíos</button>
+        </div>
+
+        <div class="score-board">
+            ⭐ Puntos: <span id="totalScore">0</span> | 🔥 Nivel: <span id="level">Principiante</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Historia -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 20px;">🏛️ Los Orígenes de la Divisibilidad</h2>
+            
+            <div class="history-card">
+                <h3>🌟 ¿Sabías que...?</h3>
+                <p style="font-size: 18px; line-height: 1.6;">
+                    La divisibilidad ha sido clave para la humanidad desde hace más de 4000 años. Los antiguos matemáticos descubrieron 
+                    patrones que hoy usamos en computadoras, códigos secretos y hasta en la música.
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2000 a.C.</div>
+                        <h4>Babilonios</h4>
+                        <p>Los babilonios usaban la divisibilidad para crear calendarios precisos. Dividían el año en 12 meses porque 12 tiene muchos divisores (1, 2, 3, 4, 6, 12).</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">300 a.C.</div>
+                        <h4>Euclides</h4>
+                        <p>En "Los Elementos", Euclides estableció las bases de la divisibilidad que aún usamos hoy. Su algoritmo para encontrar el máximo común divisor sigue siendo fundamental.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">1801</div>
+                        <h4>Carl Gauss</h4>
+                        <p>Gauss revolucionó la teoría de números con sus "Disquisitiones Arithmeticae", estableciendo las bases modernas de la divisibilidad y congruencias.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">1970s</div>
+                        <h4>Era Digital</h4>
+                        <p>Las reglas de divisibilidad se vuelven cruciales para la criptografía y la informática. Los códigos de barras y tarjetas de crédito las usan para detectar errores.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('rules')" style="font-size: 18px;">
+                    📏 Explorar las Reglas
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Reglas -->
+        <div class="section" id="rules">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">📏 Las Reglas Mágicas de la Divisibilidad</h2>
+            
+            <div class="activity-card">
+                <h3>🎯 Detector Universal de Divisibilidad</h3>
+                <p>Introduce un número y descubre todos sus secretos de divisibilidad</p>
+                
+                <div class="input-group">
+                    <label>Número a analizar:</label>
+                    <input type="number" id="analyzeNumber" min="1" max="999999" value="1234">
+                    <button class="btn" onclick="analyzeNumber()">🔍 Analizar</button>
+                </div>
+
+                <div id="analysisResult" class="result-box"></div>
+            </div>
+
+            <div class="rule-card">
+                <h4>🔢 Divisibilidad por 2</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 2 si su última cifra es par (0, 2, 4, 6, 8).</p>
+                <p><strong>¿Por qué funciona?</strong> Porque 10 es divisible por 2, cualquier número que termine en cifra par también lo será.</p>
+            </div>
+
+            <div class="rule-card">
+                <h4>3️⃣ Divisibilidad por 3</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 3 si la suma de sus cifras es divisible por 3.</p>
+                <p><strong>Ejemplo:</strong> 1234 → 1+2+3+4 = 10. Como 10 no es divisible por 3, 1234 tampoco.</p>
+                
+                <div class="input-group" style="margin-top: 10px;">
+                    <input type="number" id="test3" placeholder="Prueba un número">
+                    <button class="btn" onclick="testDivisibility(3)">Probar</button>
+                </div>
+                <div id="result3" class="result-box" style="min-height: 20px;"></div>
+            </div>
+
+            <div class="rule-card">
+                <h4>4️⃣ Divisibilidad por 4</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 4 si sus dos últimas cifras forman un número divisible por 4.</p>
+                <p><strong>Ejemplo:</strong> 1236 → Las dos últimas cifras son 36. Como 36 ÷ 4 = 9, entonces 1236 es divisible por 4.</p>
+            </div>
+
+            <div class="rule-card">
+                <h4>5️⃣ Divisibilidad por 5</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 5 si termina en 0 o 5.</p>
+                <p><strong>¿Por qué?</strong> Porque contamos en base 10, y 10 = 2 × 5.</p>
+            </div>
+
+            <div class="rule-card">
+                <h4>6️⃣ Divisibilidad por 6</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 6 si es divisible por 2 Y por 3.</p>
+                <p><strong>¿Por qué?</strong> Porque 6 = 2 × 3, y 2 y 3 son números primos entre sí.</p>
+            </div>
+
+            <div class="rule-card">
+                <h4>9️⃣ Divisibilidad por 9</h4>
+                <p><strong>Regla:</strong> Un número es divisible por 9 si la suma de sus cifras es divisible por 9.</p>
+                <p><strong>Truco:</strong> Puedes seguir sumando las cifras hasta obtener un solo dígito. Si es 9, es divisible por 9.</p>
+            </div>
+        </div>
+
+        <!-- Sección Aplicaciones -->
+        <div class="section" id="applications">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🌍 La Divisibilidad en Nuestro Mundo</h2>
+            
+            <div class="practical-example">
+                <h4>🛒 Códigos de Barras</h4>
+                <p>Los códigos de barras usan la divisibilidad para detectar errores. El último dígito es un "dígito de control" calculado con reglas de divisibilidad.</p>
+                
+                <div class="input-group">
+                    <label>Código de barras (12 dígitos):</label>
+                    <input type="text" id="barcodeInput" placeholder="123456789012" maxlength="12">
+                    <button class="btn" onclick="validateBarcode()">✅ Validar</button>
+                </div>
+                <div id="barcodeResult" class="result-box"></div>
+            </div>
+
+            <div class="practical-example">
+                <h4>💳 Números de Tarjetas de Crédito</h4>
+                <p>El algoritmo de Luhn usa reglas de divisibilidad por 10 para validar números de tarjetas de crédito.</p>
+                
+                <div class="input-group">
+                    <label>Número de tarjeta (16 dígitos):</label>
+                    <input type="text" id="cardInput" placeholder="4532015112830366" maxlength="16">
+                    <button class="btn" onclick="validateCard()">💳 Validar</button>
+                </div>
+                <div id="cardResult" class="result-box"></div>
+            </div>
+
+            <div class="practical-example">
+                <h4>🗓️ Años Bisiestos</h4>
+                <p>Un año es bisiesto si es divisible por 4, excepto los años divisibles por 100 (a menos que también sean divisibles por 400).</p>
+                
+                <div class="input-group">
+                    <label>Año:</label>
+                    <input type="number" id="yearInput" placeholder="2024" min="1" max="3000">
+                    <button class="btn" onclick="checkLeapYear()">🗓️ Verificar</button>
+                </div>
+                <div id="yearResult" class="result-box"></div>
+            </div>
+
+            <div class="practical-example">
+                <h4>🎵 Música y Ritmo</h4>
+                <p>En música, los compases se basan en divisibilidad. Un compás de 4/4 significa 4 tiempos, divisible en 2, lo que crea ritmos equilibrados.</p>
+                
+                <div class="input-group">
+                    <label>Compás (ej: 4/4, 3/4, 6/8):</label>
+                    <input type="text" id="rhythmInput" placeholder="4/4">
+                    <button class="btn" onclick="analyzeRhythm()">🎵 Analizar</button>
+                </div>
+                <div id="rhythmResult" class="result-box"></div>
+            </div>
+
+            <div class="practical-example">
+                <h4>🔐 Criptografía RSA</h4>
+                <p>La seguridad de internet se basa en la dificultad de factorizar números muy grandes. RSA usa números primos gigantes.</p>
+                
+                <div class="input-group">
+                    <label>Factorizar número:</label>
+                    <input type="number" id="factorInput" placeholder="143" min="2" max="10000">
+                    <button class="btn" onclick="factorize()">🔐 Factorizar</button>
+                </div>
+                <div id="factorResult" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Práctica -->
+        <div class="section" id="practice">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">💻 Laboratorio de Divisibilidad</h2>
+            
+            <div class="game-area">
+                <h3>🎯 Simulador de Aplicaciones Reales</h3>
+                
+                <div class="quiz-card">
+                    <h4>🏪 Organizador de Inventario</h4>
+                    <p>Tienes productos que debes organizar en cajas iguales. ¿Cuántas configuraciones son posibles?</p>
+                    
+                    <div class="input-group">
+                        <label>Número de productos:</label>
+                        <input type="number" id="inventoryInput" placeholder="48" min="1" max="1000">
+                        <button class="btn" onclick="organizeInventory()">📦 Organizar</button>
+                    </div>
+                    <div id="inventoryResult" class="result-box"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>⏰ Planificador de Horarios</h4>
+                    <p>Necesitas programar actividades que se repitan en ciclos regulares.</p>
+                    
+                    <div class="input-group">
+                        <label>Actividad A cada:</label>
+                        <input type="number" id="activityA" placeholder="6" min="1" max="60">
+                        <label>minutos, Actividad B cada:</label>
+                        <input type="number" id="activityB" placeholder="8" min="1" max="60">
+                        <label>minutos</label>
+                        <button class="btn" onclick="scheduleActivities()">⏰ Programar</button>
+                    </div>
+                    <div id="scheduleResult" class="result-box"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🎨 Diseñador de Patrones</h4>
+                    <p>Crea patrones visuales usando reglas de divisibilidad.</p>
+                    
+                    <div class="input-group">
+                        <label>Patrón cada:</label>
+                        <input type="number" id="patternInput" placeholder="7" min="2" max="20">
+                        <label>elementos</label>
+                        <button class="btn" onclick="createPattern()">🎨 Crear</button>
+                    </div>
+                    <div id="patternDisplay" style="display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Desafíos -->
+        <div class="section" id="challenges">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🎯 Desafíos del Mundo Real</h2>
+            
+            <div class="activity-card">
+                <h3>🚀 Misiones Matemáticas</h3>
+                
+                <div class="quiz-card">
+                    <h4>🏛️ El Misterio de las Pirámides</h4>
+                    <p>Los antiguos egipcios construían con bloques de piedra. Si una pirámide tiene 2,300,000 bloques, ¿se puede dividir exactamente en equipos de 100 trabajadores?</p>
+                    <div class="input-group">
+                        <input type="text" id="pyramid" placeholder="Sí o No">
+                        <button class="btn" onclick="checkChallenge('pyramid')">🏛️ Resolver</button>
+                    </div>
+                    <div id="pyramidResult" class="result-box"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🌍 Misión Espacial</h4>
+                    <p>Un satélite orbita la Tierra cada 90 minutos. Otro cada 120 minutos. ¿Cada cuánto tiempo se encuentran en el mismo punto?</p>
+                    <div class="input-group">
+                        <input type="number" id="satellite" placeholder="minutos">
+                        <button class="btn" onclick="checkChallenge('satellite')">🛰️ Calcular</button>
+                    </div>
+                    <div id="satelliteResult" class="result-box"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🎪 El Circo Matemático</h4>
+                    <p>Un circo tiene 240 asientos. El director quiere organizarlos en filas con el mismo número de asientos. ¿Cuántas configuraciones rectangulares son posibles?</p>
+                    <div class="input-group">
+                        <input type="number" id="circus" placeholder="número de configuraciones">
+                        <button class="btn" onclick="checkChallenge('circus')">🎪 Contar</button>
+                    </div>
+                    <div id="circusResult" class="result-box"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>💻 El Código Secreto</h4>
+                    <p>Un programador necesita crear un código de 5 dígitos donde la suma de los dígitos sea divisible por 9 y el número termine en 0. Da un ejemplo.</p>
+                    <div class="input-group">
+                        <input type="text" id="secretCode" placeholder="12345" maxlength="5">
+                        <button class="btn" onclick="checkChallenge('code')">💻 Verificar</button>
+                    </div>
+                    <div id="codeResult" class="result-box"></div>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🏆 Desafío Final: El Gran Teorema</h3>
+                <div class="quiz-card">
+                    <p style="font-size: 18px; font-weight: bold; color: #e74c3c;">
+                        "Todo número entero mayor que 1 es primo o producto de números primos"
+                    </p>
+                    <p>Este es el Teorema Fundamental de la Aritmética. Encuentra la factorización prima completa de 2310.</p>
+                    <div class="input-group">
+                        <input type="text" id="primeFactors" placeholder="2×3×5×7×11..." style="min-width: 200px;">
+                        <button class="btn" onclick="checkChallenge('prime')">👑 Resolver</button>
+                    </div>
+                    <div id="primeResult" class="result-box"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>🎉 ¡Excelente trabajo!</h2>
+        <p id="celebrationMessage"></p>
+        <button class="btn" onclick="closeCelebration()">Continuar</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let level = 'Principiante';
+
+        const levels = [
+            { name: 'Principiante', min: 0 },
+            { name: 'Aprendiz', min: 100 },
+            { name: 'Explorador', min: 250 },
+            { name: 'Detective', min: 500 },
+            { name: 'Experto', min: 750 },
+            { name: 'Maestro', min: 1000 }
+        ];
+
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            document.getElementById(sectionName).classList.add('active');
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Encontrar el botón correcto y marcarlo como activo
+            tabs.forEach(tab => {
+                if (tab.onclick && tab.onclick.toString().includes(sectionName)) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        function updateScore(points) {
+            totalScore += points;
+            document.getElementById('totalScore').textContent = totalScore;
+            
+            // Actualizar nivel
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (totalScore >= levels[i].min) {
+                    if (level !== levels[i].name) {
+                        level = levels[i].name;
+                        showCelebration(`¡Felicidades! Has alcanzado el nivel: ${level}`);
+                    }
+                    break;
+                }
+            }
+            document.getElementById('level').textContent = level;
+        }
+
+        function showCelebration(message) {
+            document.getElementById('celebrationMessage').textContent = message;
+            document.getElementById('celebration').style.display = 'block';
+            setTimeout(() => closeCelebration(), 3000);
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebration').style.display = 'none';
+        }
+
+        function analyzeNumber() {
+            const num = parseInt(document.getElementById('analyzeNumber').value);
+            if (!num) return;
+
+            let result = `<h4>Análisis completo de ${num}:</h4>`;
+            
+            // Verificar divisibilidad por diferentes números
+            const divisors = [2, 3, 4, 5, 6, 8, 9, 10, 11];
+            let divisibleBy = [];
+            
+            divisors.forEach(divisor => {
+                if (num % divisor === 0) {
+                    divisibleBy.push(divisor);
+                }
+            });
+            
+            if (divisibleBy.length > 0) {
+                result += `<p><strong style="color: green;">✅ Es divisible por:</strong> ${divisibleBy.join(', ')}</p>`;
+            }
+            
+            // Análisis específico por cada regla
+            result += `<div style="margin-top: 15px;">`;
+            
+            // Regla del 2
+            const lastDigit = num % 10;
+            result += `<p><strong>Por 2:</strong> ${lastDigit % 2 === 0 ? '✅' : '❌'} (última cifra: ${lastDigit})</p>`;
+            
+            // Regla del 3 y 9
+            const digitSum = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+            result += `<p><strong>Por 3:</strong> ${digitSum % 3 === 0 ? '✅' : '❌'} (suma de cifras: ${digitSum})</p>`;
+            result += `<p><strong>Por 9:</strong> ${digitSum % 9 === 0 ? '✅' : '❌'} (suma de cifras: ${digitSum})</p>`;
+            
+            // Regla del 4
+            const lastTwoDigits = num % 100;
+            result += `<p><strong>Por 4:</strong> ${lastTwoDigits % 4 === 0 ? '✅' : '❌'} (últimas dos cifras: ${lastTwoDigits})</p>`;
+            
+            // Regla del 5
+            result += `<p><strong>Por 5:</strong> ${(lastDigit === 0 || lastDigit === 5) ? '✅' : '❌'} (termina en: ${lastDigit})</p>`;
+            
+            result += `</div>`;
+            
+            document.getElementById('analysisResult').innerHTML = result;
+            updateScore(20);
+        }
+
+        function testDivisibility(divisor) {
+            const num = parseInt(document.getElementById(`test${divisor}`).value);
+            if (!num) return;
+            
+            let result = '';
+            let explanation = '';
+            
+            if (divisor === 3) {
+                const digitSum = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+                const isDivisible = digitSum % 3 === 0;
+                explanation = `Suma de cifras: ${num.toString().split('').join('+')} = ${digitSum}`;
+                result = `<strong>${num}</strong> ${isDivisible ? '✅ SÍ' : '❌ NO'} es divisible por 3<br>${explanation}`;
+                
+                if (isDivisible) updateScore(5);
+            }
+            
+            document.getElementById(`result${divisor}`).innerHTML = result;
+        }
+
+        function validateBarcode() {
+            const code = document.getElementById('barcodeInput').value;
+            if (code.length !== 12 || !/^\d+$/.test(code)) {
+                document.getElementById('barcodeResult').innerHTML = '<span style="color: red;">❌ Ingresa exactamente 12 dígitos</span>';
+                return;
+            }
+            
+            // Algoritmo UPC para códigos de barras
+            let sum = 0;
+            for (let i = 0; i < 11; i++) {
+                const digit = parseInt(code[i]);
+                sum += i % 2 === 0 ? digit : digit * 3;
+            }
+            
+            const checkDigit = (10 - (sum % 10)) % 10;
+            const actualCheckDigit = parseInt(code[11]);
+            
+            const isValid = checkDigit === actualCheckDigit;
+            
+            document.getElementById('barcodeResult').innerHTML = 
+                `<strong>Código:</strong> ${code}<br>` +
+                `<strong>Dígito calculado:</strong> ${checkDigit}<br>` +
+                `<strong>Dígito real:</strong> ${actualCheckDigit}<br>` +
+                `<span style="color: ${isValid ? 'green' : 'red'};">` +
+                `${isValid ? '✅ Código válido' : '❌ Código inválido'}</span>`;
+                
+            if (isValid) updateScore(25);
+        }
+
+        function validateCard() {
+            const card = document.getElementById('cardInput').value.replace(/\s/g, '');
+            if (card.length !== 16 || !/^\d+$/.test(card)) {
+                document.getElementById('cardResult').innerHTML = '<span style="color: red;">❌ Ingresa exactamente 16 dígitos</span>';
+                return;
+            }
+            
+            // Algoritmo de Luhn
+            let sum = 0;
+            let alternate = false;
+            
+            for (let i = card.length - 1; i >= 0; i--) {
+                let digit = parseInt(card[i]);
+                
+                if (alternate) {
+                    digit *= 2;
+                    if (digit > 9) digit = Math.floor(digit / 10) + (digit % 10);
+                }
+                
+                sum += digit;
+                alternate = !alternate;
+            }
+            
+            const isValid = sum % 10 === 0;
+            
+            document.getElementById('cardResult').innerHTML = 
+                `<strong>Número:</strong> ${card}<br>` +
+                `<strong>Suma de control:</strong> ${sum}<br>` +
+                `<span style="color: ${isValid ? 'green' : 'red'};">` +
+                `${isValid ? '✅ Tarjeta válida (algoritmo de Luhn)' : '❌ Tarjeta inválida'}</span>`;
+                
+            if (isValid) updateScore(30);
+        }
+
+        function checkLeapYear() {
+            const year = parseInt(document.getElementById('yearInput').value);
+            if (!year) return;
+            
+            const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+            
+            let explanation = '';
+            if (year % 4 !== 0) {
+                explanation = `${year} no es divisible por 4`;
+            } else if (year % 100 === 0 && year % 400 !== 0) {
+                explanation = `${year} es divisible por 100 pero no por 400`;
+            } else {
+                explanation = year % 400 === 0 ? 
+                    `${year} es divisible por 400` : 
+                    `${year} es divisible por 4 pero no por 100`;
+            }
+            
+            document.getElementById('yearResult').innerHTML = 
+                `<strong>Año ${year}:</strong> ${isLeap ? '✅ Es bisiesto' : '❌ No es bisiesto'}<br>` +
+                `<strong>Explicación:</strong> ${explanation}`;
+                
+            updateScore(15);
+        }
+
+        function analyzeRhythm() {
+            const rhythm = document.getElementById('rhythmInput').value;
+            const match = rhythm.match(/^(\d+)\/(\d+)$/);
+            
+            if (!match) {
+                document.getElementById('rhythmResult').innerHTML = '<span style="color: red;">❌ Formato inválido. Usa formato como 4/4 o 3/4</span>';
+                return;
+            }
+            
+            const numerator = parseInt(match[1]);
+            const denominator = parseInt(match[2]);
+            
+            // Encontrar divisores del numerador
+            const divisors = [];
+            for (let i = 1; i <= numerator; i++) {
+                if (numerator % i === 0) divisors.push(i);
+            }
+            
+            document.getElementById('rhythmResult').innerHTML = 
+                `<strong>Compás ${rhythm}:</strong><br>` +
+                `<strong>Tiempos por compás:</strong> ${numerator}<br>` +
+                `<strong>Subdivisiones posibles:</strong> ${divisors.join(', ')}<br>` +
+                `<strong>Tipo de compás:</strong> ${numerator % 2 === 0 ? 'Binario (par)' : 'Ternario (impar)'}`;
+                
+            updateScore(10);
+        }
+
+        function factorize() {
+            const num = parseInt(document.getElementById('factorInput').value);
+            if (!num || num < 2) return;
+            
+            const factors = [];
+            let n = num;
+            
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                while (n % i === 0) {
+                    factors.push(i);
+                    n /= i;
+                }
+            }
+            if (n > 1) factors.push(n);
+            
+            const isPrime = factors.length === 1 && factors[0] === num;
+            
+            document.getElementById('factorResult').innerHTML = 
+                `<strong>Número:</strong> ${num}<br>` +
+                `<strong>Factores primos:</strong> ${factors.join(' × ')}<br>` +
+                `<strong>Tipo:</strong> ${isPrime ? 'Número primo 🔐' : 'Número compuesto'}`;
+                
+            updateScore(isPrime ? 25 : 15);
+        }
+
+        function organizeInventory() {
+            const products = parseInt(document.getElementById('inventoryInput').value);
+            if (!products) return;
+            
+            const divisors = [];
+            for (let i = 1; i <= products; i++) {
+                if (products % i === 0) divisors.push(i);
+            }
+            
+            const configurations = [];
+            for (let i = 0; i < divisors.length; i++) {
+                const boxes = divisors[i];
+                const itemsPerBox = products / boxes;
+                configurations.push(`${boxes} cajas con ${itemsPerBox} productos cada una`);
+            }
+            
+            document.getElementById('inventoryResult').innerHTML = 
+                `<strong>Total de productos:</strong> ${products}<br>` +
+                `<strong>Configuraciones posibles:</strong> ${configurations.length}<br>` +
+                `<div style="margin-top: 10px;">` +
+                configurations.map(config => `• ${config}`).join('<br>') +
+                `</div>`;
+                
+            updateScore(20);
+        }
+
+        function scheduleActivities() {
+            const a = parseInt(document.getElementById('activityA').value);
+            const b = parseInt(document.getElementById('activityB').value);
+            if (!a || !b) return;
+            
+            // Calcular MCM
+            const gcd = (x, y) => y === 0 ? x : gcd(y, x % y);
+            const lcm = (a * b) / gcd(a, b);
+            
+            document.getElementById('scheduleResult').innerHTML = 
+                `<strong>Actividad A:</strong> cada ${a} minutos<br>` +
+                `<strong>Actividad B:</strong> cada ${b} minutos<br>` +
+                `<strong>Se encuentran cada:</strong> ${lcm} minutos<br>` +
+                `<strong>En horas:</strong> ${lcm / 60} horas<br>` +
+                `<strong>Primeras coincidencias:</strong> ${lcm}, ${lcm*2}, ${lcm*3}... minutos`;
+                
+            updateScore(30);
+        }
+
+        function createPattern() {
+            const pattern = parseInt(document.getElementById('patternInput').value);
+            if (!pattern) return;
+            
+            const display = document.getElementById('patternDisplay');
+            display.innerHTML = '';
+            
+            for (let i = 1; i <= 50; i++) {
+                const block = document.createElement('div');
+                block.style.width = '30px';
+                block.style.height = '30px';
+                block.style.display = 'flex';
+                block.style.alignItems = 'center';
+                block.style.justifyContent = 'center';
+                block.style.borderRadius = '5px';
+                block.style.fontWeight = 'bold';
+                block.style.color = 'white';
+                block.textContent = i;
+                
+                if (i % pattern === 0) {
+                    block.style.background = 'linear-gradient(45deg, #ff6b6b, #feca57)';
+                } else {
+                    block.style.background = '#ddd';
+                    block.style.color = '#666';
+                }
+                
+                display.appendChild(block);
+            }
+            
+            updateScore(15);
+        }
+
+        function checkChallenge(type) {
+            let isCorrect = false;
+            let explanation = '';
+            
+            switch(type) {
+                case 'pyramid':
+                    const answer = document.getElementById('pyramid').value.toLowerCase().trim();
+                    isCorrect = answer === 'sí' || answer === 'si';
+                    explanation = isCorrect ? 
+                        '✅ ¡Correcto! 2,300,000 es divisible por 100 (termina en 00)' :
+                        '❌ Incorrecto. 2,300,000 SÍ es divisible por 100 porque termina en 00';
+                    document.getElementById('pyramidResult').innerHTML = explanation;
+                    break;
+                    
+                case 'satellite':
+                    const minutes = parseInt(document.getElementById('satellite').value);
+                    const gcd90_120 = (a, b) => b === 0 ? a : gcd90_120(b, a % b);
+                    const lcm90_120 = (90 * 120) / gcd90_120(90, 120);
+                    isCorrect = minutes === lcm90_120;
+                    explanation = isCorrect ?
+                        `✅ ¡Correcto! MCM(90, 120) = ${lcm90_120} minutos = ${lcm90_120/60} horas` :
+                        `❌ Incorrecto. La respuesta es ${lcm90_120} minutos (${lcm90_120/60} horas)`;
+                    document.getElementById('satelliteResult').innerHTML = explanation;
+                    break;
+                    
+                case 'circus':
+                    const configs = parseInt(document.getElementById('circus').value);
+                    // Contar divisores de 240
+                    let divisorCount = 0;
+                    for (let i = 1; i <= 240; i++) {
+                        if (240 % i === 0) divisorCount++;
+                    }
+                    // Las configuraciones rectangulares son pares de divisores
+                    const rectangularConfigs = Math.ceil(divisorCount / 2);
+                    isCorrect = configs === rectangularConfigs;
+                    explanation = isCorrect ?
+                        `✅ ¡Correcto! 240 tiene ${divisorCount} divisores, formando ${rectangularConfigs} configuraciones rectangulares` :
+                        `❌ Incorrecto. La respuesta es ${rectangularConfigs} configuraciones`;
+                    document.getElementById('circusResult').innerHTML = explanation;
+                    break;
+                    
+                case 'code':
+                    const code = document.getElementById('secretCode').value;
+                    if (code.length !== 5 || !/^\d+$/.test(code)) {
+                        document.getElementById('codeResult').innerHTML = '❌ Debe ser exactamente 5 dígitos';
+                        return;
+                    }
+                    const digitSum = code.split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+                    const endsInZero = code.endsWith('0');
+                    const sumDivisibleBy9 = digitSum % 9 === 0;
+                    isCorrect = endsInZero && sumDivisibleBy9;
+                    explanation = `Código: ${code}<br>` +
+                        `Suma de dígitos: ${digitSum} ${sumDivisibleBy9 ? '(✅ divisible por 9)' : '(❌ no divisible por 9)'}<br>` +
+                        `Termina en 0: ${endsInZero ? '✅' : '❌'}<br>` +
+                        `${isCorrect ? '✅ ¡Código válido!' : '❌ Código inválido'}`;
+                    document.getElementById('codeResult').innerHTML = explanation;
+                    break;
+                    
+                case 'prime':
+                    const factors = document.getElementById('primeFactors').value;
+                    // 2310 = 2×3×5×7×11
+                    const correctFactors = ['2×3×5×7×11', '2*3*5*7*11', '2 × 3 × 5 × 7 × 11', '2 * 3 * 5 * 7 * 11'];
+                    isCorrect = correctFactors.some(correct => 
+                        factors.replace(/\s/g, '').toLowerCase() === correct.replace(/\s/g, '').toLowerCase()
+                    );
+                    explanation = isCorrect ?
+                        '✅ ¡Excelente! 2310 = 2 × 3 × 5 × 7 × 11 (producto de los primeros 5 números primos)' :
+                        '❌ Incorrecto. 2310 = 2 × 3 × 5 × 7 × 11';
+                    document.getElementById('primeResult').innerHTML = explanation;
+                    break;
+            }
+            
+            if (isCorrect) {
+                const points = type === 'prime' ? 100 : type === 'circus' ? 50 : 40;
+                updateScore(points);
+                if (type === 'prime') {
+                    showCelebration('¡Has resuelto el Desafío Final! 🏆');
+                }
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efectos de botones
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Manejar los clicks de navegación correctamente
+            const navButtons = document.querySelectorAll('.tab-btn');
+            navButtons.forEach((button, index) => {
+                const sections = ['intro', 'rules', 'applications', 'practice', 'challenges'];
+                button.addEventListener('click', () => {
+                    showSection(sections[index]);
+                    
+                    // Actualizar botones activos
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
