@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔬 Términos Semejantes - Lab Algebraico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .score-display {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 35px;
+            margin: 25px 0;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            display: none;
+            animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.8; }
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            color: white;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.95);
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0px);
+        }
+
+        .result-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #333;
+            min-height: 60px;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-box.success {
+            border-left: 5px solid #27ae60;
+            background: linear-gradient(135deg, #d5f4e6 0%, #feffff 100%);
+        }
+
+        .result-box.error {
+            border-left: 5px solid #e74c3c;
+            background: linear-gradient(135deg, #fadbd8 0%, #feffff 100%);
+        }
+
+        .term-visual {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .term-box {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .term-box:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .term-box.similar {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .term-box.not-similar {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .equation-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 24px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .drag-area {
+            background: rgba(255,255,255,0.1);
+            border: 3px dashed rgba(255,255,255,0.5);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .drag-area.drag-over {
+            background: rgba(78, 205, 196, 0.3);
+            border-color: rgba(78, 205, 196, 0.8);
+        }
+
+        .draggable-term {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 10px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .draggable-term:active {
+            cursor: grabbing;
+        }
+
+        .draggable-term.dragging {
+            opacity: 0.5;
+            transform: rotate(10deg);
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            color: #333;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .variable-highlight {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .coefficient-highlight {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .nav-tabs { gap: 8px; }
+            .tab-btn { padding: 10px 18px; font-size: 14px; }
+            .container { padding: 15px; }
+            .section { padding: 20px; margin: 15px 0; }
+            .input-group { flex-direction: column; align-items: stretch; }
+            .input-group > * { margin: 5px 0; }
+            .term-visual { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔬 Términos Semejantes - Laboratorio Algebraico</h1>
+        <p class="subtitle">¡Conviértete en un científico de las matemáticas y descubre los secretos del álgebra!</p>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showSection('intro')">🌟 Misión</button>
+            <button class="tab-btn" onclick="showSection('theory')">📚 Teoría</button>
+            <button class="tab-btn" onclick="showSection('identify')">🔍 Identificar</button>
+            <button class="tab-btn" onclick="showSection('combine')">⚗️ Combinar</button>
+            <button class="tab-btn" onclick="showSection('practice')">🎮 Práctica</button>
+            <button class="tab-btn" onclick="showSection('realworld')">🌍 Mundo Real</button>
+        </div>
+
+        <div class="score-display">
+            🏆 Puntos de Laboratorio: <span id="totalScore">0</span> | 🔥 Racha: <span id="streak">0</span> | 🧪 Nivel: <span id="level">Aprendiz</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sección Introducción -->
+        <div class="section active" id="intro">
+            <h2 style="text-align: center; color: #4a5568; margin-bottom: 25px;">🌟 Bienvenido al Laboratorio de Álgebra</h2>
+            
+            <div class="story-card">
+                <h3>🔬 Tu Misión Científica</h3>
+                <p style="font-size: 18px; line-height: 1.8;">
+                    Eres un científico novato en el Laboratorio de Álgebra más avanzado del mundo. Tu misión es dominar 
+                    el arte de identificar y combinar <strong>términos semejantes</strong> para resolver ecuaciones 
+                    que podrían cambiar el futuro de las matemáticas.
+                </p>
+                <br>
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Los términos semejantes son como elementos químicos que solo pueden combinarse con otros de la misma familia. 
+                    ¿Estás listo para descubrir este increíble mundo algebraico?
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎯 ¿Qué Aprenderás?</h3>
+                <div style="font-size: 16px; line-height: 1.8;">
+                    <p>✨ Identificar términos semejantes como un detective matemático</p>
+                    <p>🔧 Combinar términos para simplificar expresiones algebraicas</p>
+                    <p>🎮 Resolver problemas interactivos y emocionantes</p>
+                    <p>🌍 Descubrir cómo se usan en el mundo real</p>
+                    <p>🏆 Completar desafíos épicos y ganar puntos de laboratorio</p>
+                </div>
+            </div>
+
+            <div class="equation-display">
+                Ejemplo: 3x + 2y + 5x - y = 8x + y
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="showSection('theory')" style="font-size: 20px; padding: 18px 36px;">
+                    🚀 ¡Comenzar Investigación!
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección Teoría -->
+        <div class="section" id="theory">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">📚 Fundamentos Teóricos</h2>
+            
+            <div class="story-card">
+                <h3>🧪 ¿Qué son los Términos Semejantes?</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Los términos semejantes son como <strong>hermanos gemelos</strong> en el álgebra. 
+                    Son términos que tienen exactamente las mismas variables elevadas a las mismas potencias, 
+                    pero pueden tener coeficientes diferentes.
+                </p>
+                <br>
+                <div style="font-size: 18px; font-weight: bold;">
+                    Ejemplo: <span class="coefficient-highlight">5</span><span class="variable-highlight">x</span> y <span class="coefficient-highlight">-3</span><span class="variable-highlight">x</span> son términos semejantes
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🔍 Anatomía de un Término</h3>
+                <p>Cada término algebraico tiene partes importantes:</p>
+                
+                <div class="equation-display">
+                    <span class="coefficient-highlight">7</span><span class="variable-highlight">x²y</span>
+                </div>
+                
+                <div style="margin: 20px 0; font-size: 16px;">
+                    <p><span class="coefficient-highlight">7</span> = <strong>Coeficiente</strong> (el número que multiplica)</p>
+                    <p><span class="variable-highlight">x²y</span> = <strong>Parte literal</strong> (variables con sus exponentes)</p>
+                </div>
+                
+                <div class="result-box">
+                    <strong>Regla de Oro:</strong> Dos términos son semejantes si tienen 
+                    <em>exactamente la misma parte literal</em>, sin importar el coeficiente.
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎨 Explorador de Términos</h3>
+                <p>Analiza estos términos y observa qué los hace semejantes:</p>
+                
+                <div class="term-visual">
+                    <div class="term-box" onclick="highlightSimilar('x')">3x</div>
+                    <div class="term-box" onclick="highlightSimilar('x2')">2x²</div>
+                    <div class="term-box" onclick="highlightSimilar('x')">-5x</div>
+                    <div class="term-box" onclick="highlightSimilar('xy')">4xy</div>
+                    <div class="term-box" onclick="highlightSimilar('x2')">x²</div>
+                    <div class="term-box" onclick="highlightSimilar('xy')">-2xy</div>
+                </div>
+                
+                <button class="btn" onclick="resetTerms()">🔄 Reiniciar</button>
+                
+                <div id="termAnalysis" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Sección Identificar -->
+        <div class="section" id="identify">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🔍 Detective de Términos</h2>
+            
+            <div class="story-card">
+                <h3>🕵️ Misión: Identificación</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Como detective algebraico, tu trabajo es identificar cuáles términos pueden trabajar juntos. 
+                    Recuerda: solo los términos con la misma parte literal son "compatibles" para combinarse.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>⚡ Identificación Rápida</h3>
+                <p>¿Son estos términos semejantes?</p>
+                
+                <div id="quickIdentify" class="quiz-card">
+                    <div class="equation-display" id="termsToCompare">
+                        Presiona "Nueva Pregunta" para comenzar
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0; flex-wrap: wrap;">
+                        <button class="btn" onclick="answerSimilarity(true)">✅ Sí, son semejantes</button>
+                        <button class="btn" onclick="answerSimilarity(false)">❌ No son semejantes</button>
+                        <button class="btn" onclick="newSimilarityQuestion()">🎲 Nueva Pregunta</button>
+                    </div>
+                    
+                    <div id="similarityResult" style="text-align: center; font-weight: bold;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Combinar -->
+        <div class="section" id="combine">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">⚗️ Laboratorio de Combinación</h2>
+            
+            <div class="story-card">
+                <h3>🔬 Fusión de Términos</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Ahora que sabes identificar términos semejantes, es hora de aprender a combinarlos. 
+                    Cuando combinas términos semejantes, sumas o restas sus coeficientes y mantienes la misma parte literal.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🧮 Calculadora de Combinaciones</h3>
+                <p>Combina estos términos semejantes:</p>
+                
+                <div id="combineExercise" class="quiz-card">
+                    <div class="equation-display" id="termsToCombine">
+                        Presiona "Nuevo Ejercicio" para comenzar
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" id="combineAnswer" placeholder="Escribe tu respuesta aquí">
+                        <button class="btn" onclick="checkCombination()">🔍 Verificar</button>
+                        <button class="btn" onclick="newCombineExercise()">🎲 Nuevo Ejercicio</button>
+                    </div>
+                    
+                    <div id="combineResult" style="text-align: center; font-weight: bold;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Práctica -->
+        <div class="section" id="practice">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🎮 Campo de Entrenamiento</h2>
+            
+            <div class="story-card">
+                <h3>🏋️ Ejercicios de Práctica</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Pon a prueba todo lo que has aprendido con estos ejercicios completos. 
+                    Simplifica las siguientes expresiones combinando términos semejantes.
+                </p>
+            </div>
+
+            <div class="activity-card">
+                <h3>🎯 Simplifica la Expresión</h3>
+                
+                <div id="practiceExercise" class="quiz-card">
+                    <div class="equation-display" id="expressionToSimplify">
+                        Presiona "Nuevo Problema" para comenzar
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" id="practiceAnswer" placeholder="Expresión simplificada">
+                        <button class="btn" onclick="checkPractice()">🔍 Verificar</button>
+                        <button class="btn" onclick="newPracticeExercise()">🎲 Nuevo Problema</button>
+                    </div>
+                    
+                    <div id="practiceResult" style="text-align: center; font-weight: bold;"></div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practiceProgress"></div>
+                </div>
+                <p style="text-align: center; margin-top: 10px;">Progreso: <span id="practiceCount">0</span>/10 ejercicios completados</p>
+            </div>
+        </div>
+
+        <!-- Sección Mundo Real -->
+        <div class="section" id="realworld">
+            <h2 style="color: #4a5568; margin-bottom: 25px;">🌍 Aplicaciones en el Mundo Real</h2>
+            
+            <div class="story-card">
+                <h3>🏗️ Construcción de una Casa</h3>
+                <p style="font-size: 17px; line-height: 1.7;">
+                    Un arquitecto necesita calcular el perímetro total de una casa. 
+                    La fachada tiene 3x metros, cada lado tiene 2x metros, y la parte trasera tiene 3x metros. 
+                    ¿Cuál es el perímetro total?
+                </p>
+                <div class="equation-display">3x + 2x + 3x + 2x = 10x metros</div>
+            </div>
+
+            <div class="activity-card">
+                <h3>💰 Problema Financiero</h3>
+                <p>Ana tiene diferentes inversiones: 5x euros en acciones, 3y euros en bonos, 
+                2x euros en un fondo de inversión y 7y euros en una cuenta de ahorros. 
+                ¿Cuánto tiene en total?</p>
+                
+                <div class="input-group">
+                    <input type="text" id="financialAnswer" placeholder="Total de inversiones">
+                    <button class="btn" onclick="checkFinancial()">💡 Verificar</button>
+                </div>
+                
+                <div id="financialResult" class="result-box"></div>
+            </div>
+
+            <div class="activity-card">
+                <h3>🚗 Problema de Velocidad</h3>
+                <p>Un coche viaja durante 2t horas por la mañana, 3t horas por la tarde, 
+                y t horas por la noche. ¿Cuánto tiempo total viajó?</p>
+                
+                <div class="input-group">
+                    <input type="text" id="timeAnswer" placeholder="Tiempo total">
+                    <button class="btn" onclick="checkTime()">⏱️ Verificar</button>
+                </div>
+                
+                <div id="timeResult" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales del juego
+        let gameData = {
+            score: 0,
+            streak: 0,
+            level: 'Aprendiz',
+            practiceCount: 0,
+            currentQuestion: null,
+            currentAnswer: null
+        };
+
+        // Preguntas para identificación rápida
+        const similarityQuestions = [
+            { terms: ['3x', '5x'], answer: true, explanation: 'Ambos tienen la misma variable x' },
+            { terms: ['2y²', '-7y²'], answer: true, explanation: 'Ambos tienen y²' },
+            { terms: ['4x', '3y'], answer: false, explanation: 'Variables diferentes: x ≠ y' },
+            { terms: ['5xy', '2xy'], answer: true, explanation: 'Ambos tienen xy' },
+            { terms: ['x²', 'x³'], answer: false, explanation: 'Diferentes exponentes: x² ≠ x³' },
+            { terms: ['7', '12'], answer: true, explanation: 'Ambos son términos constantes' },
+            { terms: ['3ab', '5ba'], answer: true, explanation: 'ab = ba (propiedad conmutativa)' },
+            { terms: ['2x²y', '4x²y'], answer: true, explanation: 'Ambos tienen x²y' }
+        ];
+
+        // Ejercicios para combinar términos
+        const combineExercises = [
+            { expression: '3x + 5x', answer: '8x', explanation: '3 + 5 = 8, manteniendo x' },
+            { expression: '7y - 2y', answer: '5y', explanation: '7 - 2 = 5, manteniendo y' },
+            { expression: '4x² + 3x²', answer: '7x²', explanation: '4 + 3 = 7, manteniendo x²' },
+            { expression: '6xy - 4xy', answer: '2xy', explanation: '6 - 4 = 2, manteniendo xy' },
+            { expression: '8 + 3', answer: '11', explanation: 'Suma de constantes' },
+            { expression: '5a² - 3a²', answer: '2a²', explanation: '5 - 3 = 2, manteniendo a²' }
+        ];
+
+        // Ejercicios de práctica más complejos
+        const practiceExercises = [
+            { expression: '2x + 3y + 5x - y', answer: '7x + 2y', explanation: '(2x + 5x) + (3y - y) = 7x + 2y' },
+            { expression: '4a + 2b - a + 3b', answer: '3a + 5b', explanation: '(4a - a) + (2b + 3b) = 3a + 5b' },
+            { expression: '7x² + 3x + 2x² - x', answer: '9x² + 2x', explanation: '(7x² + 2x²) + (3x - x) = 9x² + 2x' },
+            { expression: '5m - 3n + 2m + 4n', answer: '7m + n', explanation: '(5m + 2m) + (-3n + 4n) = 7m + n' },
+            { expression: '3xy + 2x - xy + 4x', answer: '2xy + 6x', explanation: '(3xy - xy) + (2x + 4x) = 2xy + 6x' },
+            { expression: '8 - 3t + 5 + 7t', answer: '13 + 4t', explanation: '(8 + 5) + (-3t + 7t) = 13 + 4t' }
+        ];
+
+        // Funciones principales del juego
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Actualizar botones de navegación
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Función para resaltar términos similares
+        function highlightSimilar(type) {
+            resetTerms();
+            const termBoxes = document.querySelectorAll('.term-box');
+            let similarCount = 0;
+            
+            termBoxes.forEach(box => {
+                const term = box.textContent;
+                let isSimilar = false;
+                
+                switch(type) {
+                    case 'x':
+                        isSimilar = term.includes('x') && !term.includes('x²') && !term.includes('xy');
+                        break;
+                    case 'x2':
+                        isSimilar = term.includes('x²');
+                        break;
+                    case 'xy':
+                        isSimilar = term.includes('xy');
+                        break;
+                }
+                
+                if (isSimilar) {
+                    box.classList.add('similar');
+                    similarCount++;
+                } else {
+                    box.classList.add('not-similar');
+                }
+            });
+            
+            // Mostrar análisis
+            const analysis = document.getElementById('termAnalysis');
+            analysis.innerHTML = `
+                <strong>Análisis:</strong> Encontraste ${similarCount} términos semejantes del tipo "${type}". 
+                Los términos semejantes pueden combinarse porque tienen la misma parte literal.
+            `;
+            analysis.className = 'result-box success';
+            
+            updateScore(10);
+        }
+
+        function resetTerms() {
+            const termBoxes = document.querySelectorAll('.term-box');
+            termBoxes.forEach(box => {
+                box.classList.remove('similar', 'not-similar');
+            });
+            document.getElementById('termAnalysis').innerHTML = '';
+        }
+
+        // Función para nueva pregunta de similitud
+        function newSimilarityQuestion() {
+            const question = similarityQuestions[Math.floor(Math.random() * similarityQuestions.length)];
+            gameData.currentQuestion = question;
+            
+            document.getElementById('termsToCompare').textContent = 
+                `${question.terms[0]}  y  ${question.terms[1]}`;
+            document.getElementById('similarityResult').innerHTML = '';
+        }
+
+        function answerSimilarity(userAnswer) {
+            if (!gameData.currentQuestion) {
+                alert('¡Primero presiona "Nueva Pregunta"!');
+                return;
+            }
+            
+            const correct = userAnswer === gameData.currentQuestion.answer;
+            const resultDiv = document.getElementById('similarityResult');
+            
+            if (correct) {
+                resultDiv.innerHTML = `
+                    <span style="color: #27ae60;">✅ ¡Correcto!</span><br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateScore(20);
+                updateStreak(true);
+            } else {
+                resultDiv.innerHTML = `
+                    <span style="color: #e74c3c;">❌ Incorrecto</span><br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateStreak(false);
+            }
+        }
+
+        // Función para nuevo ejercicio de combinación
+        function newCombineExercise() {
+            const exercise = combineExercises[Math.floor(Math.random() * combineExercises.length)];
+            gameData.currentQuestion = exercise;
+            
+            document.getElementById('termsToCombine').textContent = exercise.expression;
+            document.getElementById('combineAnswer').value = '';
+            document.getElementById('combineResult').innerHTML = '';
+        }
+
+        function checkCombination() {
+            if (!gameData.currentQuestion) {
+                alert('¡Primero presiona "Nuevo Ejercicio"!');
+                return;
+            }
+            
+            const userAnswer = document.getElementById('combineAnswer').value.trim();
+            const correct = userAnswer.toLowerCase().replace(/\s/g, '') === 
+                           gameData.currentQuestion.answer.toLowerCase().replace(/\s/g, '');
+            const resultDiv = document.getElementById('combineResult');
+            
+            if (correct) {
+                resultDiv.innerHTML = `
+                    <span style="color: #27ae60;">✅ ¡Excelente!</span><br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateScore(30);
+                updateStreak(true);
+            } else {
+                resultDiv.innerHTML = `
+                    <span style="color: #e74c3c;">❌ Intenta de nuevo</span><br>
+                    Respuesta correcta: ${gameData.currentQuestion.answer}<br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateStreak(false);
+            }
+        }
+
+        // Función para nuevo ejercicio de práctica
+        function newPracticeExercise() {
+            const exercise = practiceExercises[Math.floor(Math.random() * practiceExercises.length)];
+            gameData.currentQuestion = exercise;
+            
+            document.getElementById('expressionToSimplify').textContent = exercise.expression;
+            document.getElementById('practiceAnswer').value = '';
+            document.getElementById('practiceResult').innerHTML = '';
+        }
+
+        function checkPractice() {
+            if (!gameData.currentQuestion) {
+                alert('¡Primero presiona "Nuevo Problema"!');
+                return;
+            }
+            
+            const userAnswer = document.getElementById('practiceAnswer').value.trim();
+            const correct = userAnswer.toLowerCase().replace(/\s/g, '') === 
+                           gameData.currentQuestion.answer.toLowerCase().replace(/\s/g, '');
+            const resultDiv = document.getElementById('practiceResult');
+            
+            if (correct) {
+                resultDiv.innerHTML = `
+                    <span style="color: #27ae60;">✅ ¡Perfecto!</span><br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateScore(50);
+                updateStreak(true);
+                updatePracticeProgress();
+            } else {
+                resultDiv.innerHTML = `
+                    <span style="color: #e74c3c;">❌ Revisa tu respuesta</span><br>
+                    Respuesta correcta: ${gameData.currentQuestion.answer}<br>
+                    ${gameData.currentQuestion.explanation}
+                `;
+                updateStreak(false);
+            }
+        }
+
+        function updatePracticeProgress() {
+            gameData.practiceCount++;
+            const progress = (gameData.practiceCount / 10) * 100;
+            
+            document.getElementById('practiceProgress').style.width = progress + '%';
+            document.getElementById('practiceCount').textContent = gameData.practiceCount;
+            
+            if (gameData.practiceCount >= 10) {
+                setTimeout(() => {
+                    alert('¡Felicitaciones! Has completado todos los ejercicios de práctica. 🏆');
+                    gameData.practiceCount = 0;
+                    updatePracticeProgress();
+                }, 1000);
+            }
+        }
+
+        // Funciones para problemas del mundo real
+        function checkFinancial() {
+            const userAnswer = document.getElementById('financialAnswer').value.trim();
+            const correctAnswer = '7x + 10y';
+            const resultDiv = document.getElementById('financialResult');
+            
+            if (userAnswer.toLowerCase().replace(/\s/g, '') === correctAnswer.toLowerCase().replace(/\s/g, '')) {
+                resultDiv.innerHTML = `
+                    <strong>✅ ¡Correcto!</strong><br>
+                    Ana tiene un total de <strong>7x + 10y euros</strong><br>
+                    (5x + 2x) + (3y + 7y) = 7x + 10y
+                `;
+                resultDiv.className = 'result-box success';
+                updateScore(40);
+            } else {
+                resultDiv.innerHTML = `
+                    <strong>❌ Intenta de nuevo</strong><br>
+                    Suma los términos semejantes: (5x + 2x) + (3y + 7y)
+                `;
+                resultDiv.className = 'result-box error';
+            }
+        }
+
+        function checkTime() {
+            const userAnswer = document.getElementById('timeAnswer').value.trim();
+            const correctAnswer = '6t';
+            const resultDiv = document.getElementById('timeResult');
+            
+            if (userAnswer.toLowerCase().replace(/\s/g, '') === correctAnswer.toLowerCase().replace(/\s/g, '')) {
+                resultDiv.innerHTML = `
+                    <strong>✅ ¡Excelente!</strong><br>
+                    El tiempo total es <strong>6t horas</strong><br>
+                    2t + 3t + t = 6t
+                `;
+                resultDiv.className = 'result-box success';
+                updateScore(40);
+            } else {
+                resultDiv.innerHTML = `
+                    <strong>❌ Revisa tu cálculo</strong><br>
+                    Suma todos los términos: 2t + 3t + t = ?
+                `;
+                resultDiv.className = 'result-box error';
+            }
+        }
+
+        // Funciones del sistema de puntuación
+        function updateScore(points) {
+            gameData.score += points;
+            document.getElementById('totalScore').textContent = gameData.score;
+            updateLevel();
+        }
+
+        function updateStreak(correct) {
+            if (correct) {
+                gameData.streak++;
+            } else {
+                gameData.streak = 0;
+            }
+            document.getElementById('streak').textContent = gameData.streak;
+        }
+
+        function updateLevel() {
+            let newLevel = 'Aprendiz';
+            
+            if (gameData.score >= 1000) newLevel = 'Maestro Algebraico';
+            else if (gameData.score >= 500) newLevel = 'Experto';
+            else if (gameData.score >= 200) newLevel = 'Investigador';
+            else if (gameData.score >= 100) newLevel = 'Científico Junior';
+            
+            if (newLevel !== gameData.level) {
+                gameData.level = newLevel;
+                document.getElementById('level').textContent = newLevel;
+                
+                // Celebrar subida de nivel
+                setTimeout(() => {
+                    alert(`🎉 ¡Felicitaciones! Has alcanzado el nivel: ${newLevel}`);
+                }, 500);
+            }
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar primera pregunta en cada sección
+            newSimilarityQuestion();
+            newCombineExercise();
+            newPracticeExercise();
+            
+            // Permitir presionar Enter en los campos de texto
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.id === 'combineAnswer') {
+                        checkCombination();
+                    } else if (activeElement.id === 'practiceAnswer') {
+                        checkPractice();
+                    } else if (activeElement.id === 'financialAnswer') {
+                        checkFinancial();
+                    } else if (activeElement.id === 'timeAnswer') {
+                        checkTime();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
